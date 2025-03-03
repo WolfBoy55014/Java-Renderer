@@ -32,8 +32,8 @@ public class UI {
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public void drawPixel(int x, int y, int r, int g, int b) {
-        img.setRGB(x, y, new Color(r, g, b).getRGB());
+    public void drawPixel(int x, int y, Color color) {
+        img.setRGB(x, y, color.getRGB());
     }
 
     public void display() {
