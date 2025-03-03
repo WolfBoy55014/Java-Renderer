@@ -1,0 +1,152 @@
+package org.wolfboy;
+
+import java.util.Arrays;
+
+public class LinearAlgebra {
+
+    /**
+     * Calculate the magnitude of a 3-dimensional vector
+     *
+     * @param vector Vector to calculate the length of
+     * @return Magnitude/length of vector
+     */
+    public static double magnitude(double[] vector) {
+        return Math.sqrt(Math.pow(vector[0], 2.0d) + Math.pow(vector[1], 2.0d) + Math.pow(vector[2], 2.0d));
+    }
+
+    /**
+     * Element-wise addition of two 3-dimensional vectors
+     *
+     * @param v1 First vector
+     * @param v2 Second vector
+     * @return 3-dimensional vector containing the sum of v1 and v2
+     */
+    public static double[] add(double[] v1, double[] v2) {
+        return new double[]{v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]};
+    }
+
+    /**
+     * Element-wise subtraction of two 3-dimensional vectors
+     *
+     * @param v1 First vector
+     * @param v2 Second vector
+     * @return 3-dimensional vector containing the subtraction of v1 and v2
+     */
+    public static double[] sub(double[] v1, double[] v2) {
+        return new double[]{v1[0] - v2[0], v1[1] - v2[1], v1[2] - v2[2]};
+    }
+
+    /**
+     * Element-wise multiplication of two 3-dimensional vectors
+     *
+     * @param v1 First vector
+     * @param v2 Second vector
+     * @return 3-dimensional vector containing the multiplication of v1 by v2
+     */
+    public static double[] mul(double[] v1, double[] v2) {
+        return new double[]{v1[0] * v2[0], v1[1] * v2[1], v1[2] * v2[2]};
+    }
+
+    /**
+     * Element-wise division of two 3-dimensional vectors
+     *
+     * @param v1 First vector
+     * @param v2 Second vector
+     * @return 3-dimensional vector containing the division of v1 by v2
+     */
+    public static double[] div(double[] v1, double[] v2) {
+        return new double[]{v1[0] / v2[0], v1[1] / v2[1], v1[2] / v2[2]};
+    }
+
+    /**
+     * Element-wise exponent of two 3-dimensional vectors
+     *
+     * @param v1 First vector
+     * @param v2 Second vector
+     * @return 3-dimensional vector containing the power of v1 by v2
+     */
+    public static double[] pow(double[] v1, double[] v2) {
+        return new double[]{Math.pow(v1[0], v2[0]), Math.pow(v1[1], v2[1]), Math.pow(v1[2], v2[2])};
+    }
+
+    /**
+     * Add a scalar value to every element of a 3-dimensional vector
+     *
+     * @param vector 3-dimensional vector
+     * @param value Scalar value
+     * @return 3-dimensional vector containing the sum of value to vector
+     */
+    public static double[] add(double[] vector, double value) {
+        return new double[]{vector[0] + value, vector[1] + value, vector[2] + value};
+    }
+
+    /**
+     * Subtract a scalar value from every element of a 3-dimensional vector
+     *
+     * @param vector 3-dimensional vector
+     * @param value Scalar value
+     * @return 3-dimensional vector containing the subtraction of value from vector
+     */
+    public static double[] sub(double[] vector, double value) {
+        return new double[]{vector[0] - value, vector[1] - value, vector[2] - value};
+    }
+
+    /**
+     * Multiply every element of a 3-dimensional vector by a scalar value
+     *
+     * @param vector 3-dimensional vector
+     * @param value Scalar value
+     * @return 3-dimensional vector containing the multiplication of vector by value
+     */
+    public static double[] mul(double[] vector, double value) {
+        return new double[]{vector[0] * value, vector[1] * value, vector[2] * value};
+    }
+
+    /**
+     * Divide every element of a 3-dimensional vector by a scalar value
+     *
+     * @param vector 3-dimensional vector
+     * @param value Scalar value
+     * @return 3-dimensional vector containing the division of vector by value
+     */
+    public static double[] div(double[] vector, double value) {
+        if (value == 0.0d) {
+            return new double[]{0.0d, 0.0d, 0.0d};
+        }
+
+        return new double[]{vector[0] / value, vector[1] / value, vector[2] / value};
+    }
+
+    /**
+     * Put every element of a 3-dimensional vector to the power of a scalar value
+     *
+     * @param vector 3-dimensional vector
+     * @param value Scalar value
+     * @return 3-dimensional vector containing the vector to the power of value
+     */
+    public static double[] pow(double[] vector, double value) {
+        return new double[]{Math.pow(vector[0], value), Math.pow(vector[1], value), Math.pow(vector[2], value)};
+    }
+
+    /**
+     * Add every element of a 3-dimensional vector together
+     *
+     * @param vector 3-dimensional vector
+     * @return The sum of all the elements of the vector
+     */
+    public static double accumulate(double[] vector) {
+        return vector[0] + vector[1] + vector[2];
+    }
+
+    public static double[] normalize(double[] vector) {
+        return div(vector, magnitude(vector));
+    }
+
+    public static double distance(double[] v1, double[] v2) {
+        return Math.sqrt(accumulate(pow(sub(v1, v2), 2.0d)));
+    }
+
+    public static double dot(double[] v1, double[] v2) {
+        return accumulate(mul(v1, v2));
+    }
+}
