@@ -149,4 +149,42 @@ public class LinearAlgebra {
     public static double dot(double[] v1, double[] v2) {
         return accumulate(mul(v1, v2));
     }
+
+    public static int[][] multiply(int[][] matrix1, int[][] matrix2) {
+        int rows1 = matrix1.length;
+        int cols1 = matrix1[0].length;
+        int cols2 = matrix2[0].length;
+
+        if (cols1 != matrix2.length) {
+            throw new IllegalArgumentException("Matrices cannot be multiplied: incompatible dimensions.");
+        }
+
+        int[][] resultMatrix = new int[rows1][cols2];
+
+        for (int i = 0; i < rows1; i++) {
+            for (int j = 0; j < cols2; j++) {
+                for (int k = 0; k < cols1; k++) {
+                    resultMatrix[i][j] += matrix1[i][k] * matrix2[k][j];
+                }
+            }
+        }
+
+        return resultMatrix;
+    }
+
+    public static double[] rot(double[] vector, double angle) {
+        double s = Math.sin(angle);
+        double c = Math.cos(angle);
+        double[][] rot = new double[][]{{c, -s}, {s, c}};
+
+        double[] result = new double[]{0.0d, 0.0d};
+
+        for (int j = 0; j < 2; j++) {
+            for (int k = 0; k < 2; k++) {
+                result[j] += vector[k] * rot[k][j];
+            }
+        }
+
+        return result;
+    }
 }

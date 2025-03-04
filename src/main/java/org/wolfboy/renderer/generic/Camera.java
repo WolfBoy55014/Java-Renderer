@@ -2,6 +2,8 @@ package org.wolfboy.renderer.generic;
 
 import org.wolfboy.LinearAlgebra;
 
+import java.util.Arrays;
+
 public class Camera {
 
     protected double FOV;
@@ -9,7 +11,7 @@ public class Camera {
     protected int height;
 
     protected double[] position = new double[3];
-    protected double[] direction = new double[3];
+    protected double[] rotation = new double[3];
 
     public Camera(int width, int height, double FOV) {
         this.width = width;
@@ -29,12 +31,12 @@ public class Camera {
         this.position = position;
     }
 
-    public void setDirection(double[] direction) {
-        this.direction = LinearAlgebra.normalize(direction);
+    public void setRotation(double[] rotation) {
+        this.rotation = rotation;
     }
 
-    public double[] getDirection() {
-        return direction;
+    public double[] getRotation() {
+        return rotation;
     }
 
     public double[] getPosition() {
@@ -54,7 +56,7 @@ public class Camera {
             direction[0] = ((x - (this.width / 2.0d)) / this.height) * FOV;
         }
 
-        direction[1] = 0.0d;
+        direction[1] = 1.0d;
 
         if (y == (this.height / 2)) {
             direction[2] = 0.0d;
@@ -62,8 +64,22 @@ public class Camera {
             direction[2] = -(((y - (this.height / 2.0d)) / this.height) * FOV);
         }
 
+        // System.out.println(Arrays.toString(direction));
+
         // Apply Camera rotation
-        direction = LinearAlgebra.add(direction, this.direction);
+        double[] roll = LinearAlgebra.rot(new double[]{direction[0], direction[2]}, this.rotation[1]);
+        direction[0] = roll[0];
+        direction[2] = roll[1];
+
+        double[] yaw = LinearAlgebra.rot(new double[]{direction[0], direction[1]}, this.rotation[2]);
+        direction[0] = yaw[0];
+        direction[1] = yaw[1];
+
+        double[] pitch = LinearAlgebra.rot(new double[]{direction[1], direction[2]}, -this.rotation[0]);
+        direction[1] = pitch[0];
+        direction[2] = pitch[1];
+
+        // System.out.println(Arrays.toString(direction));
 
         return LinearAlgebra.normalize(direction);
     }

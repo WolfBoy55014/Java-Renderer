@@ -14,13 +14,13 @@ import java.awt.*;
 public class Main {
 
     public static void main(String[] args) {
-        final int width = 640;
-        final int height = 360;
+        final int width = 64 * 4;
+        final int height = 36 * 4;
 
         UI ui = new UI(width, height);
-        MarchingCamera camera = new MarchingCamera(width, height, 1.2d);
-        camera.setDirection(new double[]{0.0d, 1.0d, -0.5d});
-        camera.setPosition(new double[]{0.0d, -2.0d, 2.0d});
+        MarchingCamera camera = new MarchingCamera(width, height, 1.0d);
+        camera.setRotation(new double[]{-0.4d, 0.0d, 0.0d});
+        camera.setPosition(new double[]{0.0d, -2.0d, 1.0d});
 
         MarchingObject[] objects = new MarchingObject[1];
         objects[0] = new Sphere(new Material(new Color(121, 225, 194)), new double[]{0.0d, 0.0d, 0.0d}, 1.0f);
