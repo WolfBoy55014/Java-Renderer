@@ -21,4 +21,8 @@ public class Renderer {
     public Scene getScene() {
         return scene;
     }
+
+    public Camera getCamera() {
+        return camera;
+    }
 }

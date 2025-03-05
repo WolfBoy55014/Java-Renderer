@@ -39,5 +39,12 @@ public class UI {
         this.renderPanel.repaint();
     }
 
+    public void clear() {
+        Graphics2D g2d = this.img.createGraphics();
+        g2d.setBackground(new java.awt.Color(0, 0, 0, 0)); // Transparent background
+        g2d.clearRect(0, 0, this.img.getWidth(), this.img.getHeight());
+        g2d.dispose(); // Release resources
+    }
+
 
 }

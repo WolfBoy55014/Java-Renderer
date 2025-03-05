@@ -56,7 +56,8 @@ public class Camera {
         // Initial direction
 
         // Calculate the horizontal angle (theta)
-        double theta = ((double) x / width) * this.FOV;
+        //double theta = ((double) x / width) * this.FOV;
+        double theta = ((double) x / width) * this.FOV - (this.FOV / 2.0);
 
         // Calculate the aspect ratio
         double aspectRatio = (double) width / height;
@@ -67,9 +68,17 @@ public class Camera {
         // System.out.println("Theta: " + theta + " Phi: " + phi);
 
         // Calculate the ray direction
-        direction[1] = Math.sin(theta) * Math.cos(phi);
+        direction[1] = Math.cos(theta) * Math.cos(phi);
         direction[2] = -Math.sin(phi);
-        direction[0] = Math.cos(theta) * Math.cos(phi);
+        direction[0] = -Math.sin(theta) * Math.cos(phi);
+
+        //double rayX = Math.sin(theta) * Math.cos(phi);
+        //double rayY = Math.sin(phi);
+        //double rayZ = Math.cos(theta) * Math.cos(phi);
+
+        //double rayX = Math.cos(theta) * Math.cos(phi); //Swapped sin and cos here.
+        //double rayY = Math.sin(phi);
+        //double rayZ = -Math.sin(theta) * Math.cos(phi); // Added a negative sign here.
 
         // System.out.println(Arrays.toString(direction));
 

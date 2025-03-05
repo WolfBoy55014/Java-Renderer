@@ -9,15 +9,17 @@ import org.wolfboy.renderer.marching.objects.primitive.Sphere;
 import org.wolfboy.ui.UI;
 
 import java.awt.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
 
     public static void main(String[] args) {
-        final int width = 640;
-        final int height = 360;
+        final int width = 720;
+        final int height = 720;
 
         UI ui = new UI(width, height);
-        MarchingCamera camera = new MarchingCamera(width, height, Math.PI);
+        MarchingCamera camera = new MarchingCamera(width, height, 2.0d * Math.PI);
         camera.setRotation(0.0d, 0.0d, 0.0d);
         camera.setPosition(0.0d, 0.0d, 0.0d);
 
@@ -32,12 +34,54 @@ public class Main {
 
         MarchingRenderer renderer = new MarchingRenderer(scene, camera);
 
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                Color color = renderer.renderPixel(x, y);
-                ui.drawPixel(x, y, color);
-                ui.display();
+        for (int i = 0; i < 100; i++) {
+            Runnable[] tasks = new Runnable[width];
+
+            for (int x = 0; x < width; x++) {
+                tasks[x] = new RenderTask(x, renderer, ui);
             }
+
+            ExecutorService pool = Executors.newFixedThreadPool(512);
+
+            long startTime = System.nanoTime();
+
+            for (int x = 0; x < width; x++) {
+                pool.execute(tasks[x]);
+            }
+
+            pool.shutdown();
+
+            while (!pool.isTerminated()) {
+                // Wait for all threads to finish
+            }
+
+            long endTime = System.nanoTime();
+
+            long duration = (endTime - startTime);  // divide by 1000000 to get milliseconds.
+
+            System.out.println("Time taken: " + duration / 1000000 + "ms");
+
+            ui.clear();
+        }
+    }
+}
+
+class RenderTask implements Runnable {
+    private final int x;
+    private final MarchingRenderer renderer;
+    private final UI ui;
+
+    public RenderTask(int x, MarchingRenderer renderer, UI ui) {
+        this.x = x;
+        this.renderer = renderer;
+        this.ui = ui;
+    }
+
+    public void run() {
+        for (int y = 0; y < renderer.getCamera().getHeight(); y++) {
+            Color color = renderer.renderPixel(x, y);
+            ui.drawPixel(x, y, color);
+            ui.display();
         }
     }
 }

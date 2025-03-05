@@ -47,9 +47,21 @@ public class MarchingRenderer extends Renderer {
             }
         }
 
-        // color = new Color((int) Math.max(this.camera.getDirectionAtPixel(x, y)[0] * 128 + 127, 0),
-        //         (int) Math.max(this.camera.getDirectionAtPixel(x, y)[1] * 128 + 127, 0),
-        //         (int) Math.max(this.camera.getDirectionAtPixel(x, y)[2] * 128 + 127, 0));
+        // color = new Color((int) Math.max(this.camera.getDirectionAtPixel(x, y)[0] * 255, 0),
+        //         0 /*(int) Math.max(this.camera.getDirectionAtPixel(x, y)[1] * 255, 0)*/,
+        //         0 /*(int) Math.max(this.camera.getDirectionAtPixel(x, y)[2] * 255, 0)*/);
+
+        // if (Math.abs(this.camera.getDirectionAtPixel(x, y)[1]) < 0.9d) {
+        //     color = new Color(0, 255, 0);
+        // }
+
+        // if (Math.abs(this.camera.getDirectionAtPixel(x, y)[0]) < 0.007d) {
+        //     color = new Color(255, 0, 0);
+        // }
+
+        // if (Math.abs(this.camera.getDirectionAtPixel(x, y)[2]) < 0.007d) {
+        //     color = new Color(0, 0, 255);
+        // }
 
         return color;
     }
