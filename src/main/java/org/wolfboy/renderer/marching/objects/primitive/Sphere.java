@@ -16,8 +16,14 @@ public class Sphere extends MarchingObject {
 
     @Override
     public double getDistance(double[] p) {
-        this.transformPoint(p);
+        p = this.transformPoint(p);
 
         return LinearAlgebra.magnitude(p) - 1.0d;
+    }
+
+    public double[] getNormal(double[] p) {
+        p = this.transformPoint(p);
+
+        return LinearAlgebra.normalize(p);
     }
 }

@@ -1,7 +1,5 @@
 package org.wolfboy;
 
-import java.util.Arrays;
-
 public class LinearAlgebra {
 
     /**

@@ -2,8 +2,6 @@ package org.wolfboy.renderer.generic;
 
 import org.wolfboy.LinearAlgebra;
 
-import java.util.Arrays;
-
 public class Camera {
 
     protected double FOV;
@@ -31,8 +29,16 @@ public class Camera {
         this.position = position;
     }
 
+    public void setPosition(double x, double y, double z) {
+        this.position = new double[]{x, y, z};
+    }
+
     public void setRotation(double[] rotation) {
         this.rotation = rotation;
+    }
+
+    public void setRotation(double pitch, double roll, double yaw) {
+        this.rotation = new double[]{pitch, roll, yaw};
     }
 
     public double[] getRotation() {
@@ -44,25 +50,26 @@ public class Camera {
     }
 
     public double[] getDirectionAtPixel(int x, int y) {
-        // (fragCoord-.5*iResolution.xy)/iResolution.y;
 
         double[] direction = new double[3];
 
         // Initial direction
 
-        if (x == (this.width / 2)) {
-            direction[0] = 0.0d;
-        } else {
-            direction[0] = ((x - (this.width / 2.0d)) / this.height) * FOV;
-        }
+        // Calculate the horizontal angle (theta)
+        double theta = ((double) x / width) * this.FOV;
 
-        direction[1] = 1.0d;
+        // Calculate the aspect ratio
+        double aspectRatio = (double) width / height;
 
-        if (y == (this.height / 2)) {
-            direction[2] = 0.0d;
-        } else {
-            direction[2] = -(((y - (this.height / 2.0d)) / this.height) * FOV);
-        }
+        // Calculate the vertical angle (phi), now considering the FOV and aspect ratio
+        double phi = ((double) y / this.height) * this.FOV / aspectRatio - (this.FOV / (2 * aspectRatio));
+
+        // System.out.println("Theta: " + theta + " Phi: " + phi);
+
+        // Calculate the ray direction
+        direction[1] = Math.sin(theta) * Math.cos(phi);
+        direction[2] = -Math.sin(phi);
+        direction[0] = Math.cos(theta) * Math.cos(phi);
 
         // System.out.println(Arrays.toString(direction));
 
@@ -71,13 +78,13 @@ public class Camera {
         direction[0] = roll[0];
         direction[2] = roll[1];
 
-        double[] yaw = LinearAlgebra.rot(new double[]{direction[0], direction[1]}, this.rotation[2]);
-        direction[0] = yaw[0];
-        direction[1] = yaw[1];
-
         double[] pitch = LinearAlgebra.rot(new double[]{direction[1], direction[2]}, -this.rotation[0]);
         direction[1] = pitch[0];
         direction[2] = pitch[1];
+
+        double[] yaw = LinearAlgebra.rot(new double[]{direction[0], direction[1]}, this.rotation[2]);
+        direction[0] = yaw[0];
+        direction[1] = yaw[1];
 
         // System.out.println(Arrays.toString(direction));
 

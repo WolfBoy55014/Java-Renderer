@@ -13,7 +13,7 @@ public class RenderPanel extends JPanel {
         g2.setColor(Color.BLACK);
         g2.fillRect(0, 0, getWidth(), getHeight());
 
-        g2.drawImage(this.img, null, 0, 0);
+        g2.drawImage(this.img, 0, 0, this.getWidth(), this.getHeight(), null);
     }
 
     public void updateImage(BufferedImage img) {

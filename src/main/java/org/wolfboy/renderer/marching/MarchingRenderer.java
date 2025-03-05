@@ -18,7 +18,7 @@ public class MarchingRenderer extends Renderer {
         this.scene = scene;
 
         MAX_DISTANCE = 100.0d;
-        MIN_DISTANCE = 0.01d;
+        MIN_DISTANCE = 0.001d;
     }
 
     public Color renderPixel(int x, int y) {
@@ -34,7 +34,7 @@ public class MarchingRenderer extends Renderer {
 
             double[] light_dir = new double[]{0.0d, 0.0d, 1.0d};
             double[] n = this.scene.getNormal(p);
-            double illumination = Math.max(0.0d, LinearAlgebra.dot(n, light_dir));
+            double illumination = Math.min(Math.max(0.2d, LinearAlgebra.dot(n, light_dir)), 1.0d);
 
 
             distance += d;
@@ -47,7 +47,9 @@ public class MarchingRenderer extends Renderer {
             }
         }
 
-        // color = new Color((int) Math.max(this.camera.getDirectionAtPixel(x, y)[0] * 255, 0), 0 /*(int) Math.max(this.camera.getDirectionAtPixel(x, y)[1] * 255, 0)*/, (int) Math.max(this.camera.getDirectionAtPixel(x, y)[2] * 255, 0));
+        // color = new Color((int) Math.max(this.camera.getDirectionAtPixel(x, y)[0] * 128 + 127, 0),
+        //         (int) Math.max(this.camera.getDirectionAtPixel(x, y)[1] * 128 + 127, 0),
+        //         (int) Math.max(this.camera.getDirectionAtPixel(x, y)[2] * 128 + 127, 0));
 
         return color;
     }

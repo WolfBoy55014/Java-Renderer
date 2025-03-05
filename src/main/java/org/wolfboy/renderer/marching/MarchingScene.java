@@ -21,11 +21,7 @@ public class MarchingScene extends Scene {
     }
 
     public double[] getNormal(double[] p) {
-        double[] n = new double[]{0.0d, 0.0d, 0.0d};
-        for (MarchingObject object : this.objects) {
-            n = object.getNormal(p);
-        }
-        return n;
+        return getNearestObject(p).getNormal(p);
     }
 
     public MarchingObject getNearestObject(double[] p) {

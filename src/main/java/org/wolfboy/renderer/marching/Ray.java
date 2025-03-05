@@ -1,13 +1,11 @@
 package org.wolfboy.renderer.marching;
 
-import java.util.Arrays;
-
 import static org.wolfboy.LinearAlgebra.*;
 
 public class Ray {
 
-    private double[] direction = new double[3];
-    private double[] position = new double[3];
+    private double[] direction;
+    private double[] position;
     private double distance = 0.0f;
 
     public Ray(double[] direction, double[] position) {
@@ -31,13 +29,11 @@ public class Ray {
         return direction;
     }
 
-    public double step(double distance) {
+    public void step(double distance) {
         double[] deltaPose = mul(this.direction, distance);
 
         this.position = add(this.position, deltaPose);
         this.distance += distance;
-
-        return distance;
     }
 
 
