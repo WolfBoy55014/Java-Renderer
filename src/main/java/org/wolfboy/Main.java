@@ -15,8 +15,8 @@ import java.util.concurrent.Executors;
 public class Main {
 
     public static void main(String[] args) {
-        final int width = 720;
-        final int height = 720;
+        final int width = 640;
+        final int height = 320;
 
         UI ui = new UI(width, height);
         MarchingCamera camera = new MarchingCamera(width, height, 2.0d * Math.PI);
@@ -34,14 +34,18 @@ public class Main {
 
         MarchingRenderer renderer = new MarchingRenderer(scene, camera);
 
-        for (int i = 0; i < 100; i++) {
+        double i = 0;
+
+        while (true) {
+            i += Math.PI / 64.0d;
+
             Runnable[] tasks = new Runnable[width];
 
             for (int x = 0; x < width; x++) {
                 tasks[x] = new RenderTask(x, renderer, ui);
             }
 
-            ExecutorService pool = Executors.newFixedThreadPool(512);
+            ExecutorService pool = Executors.newFixedThreadPool(12);
 
             long startTime = System.nanoTime();
 
@@ -59,9 +63,11 @@ public class Main {
 
             long duration = (endTime - startTime);  // divide by 1000000 to get milliseconds.
 
-            System.out.println("Time taken: " + duration / 1000000 + "ms");
+            // System.out.println("Time taken: " + duration / 1000000 + "ms");
 
-            ui.clear();
+            ui.display();
+
+            renderer.getCamera().setRotation(i, i, i);
         }
     }
 }
@@ -81,7 +87,7 @@ class RenderTask implements Runnable {
         for (int y = 0; y < renderer.getCamera().getHeight(); y++) {
             Color color = renderer.renderPixel(x, y);
             ui.drawPixel(x, y, color);
-            ui.display();
+            // ui.display();
         }
     }
 }

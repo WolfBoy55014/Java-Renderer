@@ -41,6 +41,14 @@ public class Camera {
         this.rotation = new double[]{pitch, roll, yaw};
     }
 
+    public void setFOV(double FOV) {
+        this.FOV = FOV;
+    }
+
+    public double getFOV() {
+        return FOV;
+    }
+
     public double[] getRotation() {
         return rotation;
     }
