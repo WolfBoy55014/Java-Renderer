@@ -48,6 +48,10 @@ public class UI {
         g2d.dispose(); // Release resources
     }
 
+    public Point getMousePos() {
+        Point screenPoint = MouseInfo.getPointerInfo().getLocation();
+        Point componentPoint = new Point(screenPoint);
+        SwingUtilities.convertPointFromScreen(componentPoint, this.pane);
 
         return componentPoint;
     }
