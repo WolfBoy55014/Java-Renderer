@@ -30,7 +30,7 @@ public class MarchingObject extends Object {
          */
 
         double d = this.getDistance(p);
-        double[] e = new double[]{0.01d, 0.0d, 0.0d};
+        double[] e = new double[]{0.001d, 0.0d, 0.0d};
 
         double[] n = LinearAlgebra.sub(new double[]{d, d, d}, new double[]{
             this.getDistance(LinearAlgebra.sub(p, new double[]{e[0], e[1], e[2]})),

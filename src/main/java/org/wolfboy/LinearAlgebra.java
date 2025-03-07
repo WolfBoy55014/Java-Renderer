@@ -185,4 +185,12 @@ public class LinearAlgebra {
 
         return result;
     }
+
+    public static double[] round(double[] vector) {
+        return new double[]{Math.round(vector[0]), Math.round(vector[1]), Math.round(vector[2])};
+    }
+
+    public static double[] abs(double[] vector) {
+        return new double[]{Math.abs(vector[0]), Math.abs(vector[1]), Math.abs(vector[2])};
+    }
 }

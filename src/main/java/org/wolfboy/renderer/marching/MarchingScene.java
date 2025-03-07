@@ -15,6 +15,10 @@ public class MarchingScene extends Scene {
     public double getDistance(double[] p) {
         double d = Double.MAX_VALUE;
         for (MarchingObject object : this.objects) {
+            if (object == null) {
+                continue;
+            }
+
             d = Math.min(d, object.getDistance(p));
         }
         return d;
@@ -28,6 +32,10 @@ public class MarchingScene extends Scene {
         MarchingObject nearest = null;
         double d = Double.MAX_VALUE;
         for (MarchingObject object : this.objects) {
+            if (object == null) {
+                continue;
+            }
+
             double distance = object.getDistance(p);
             if (distance < d) {
                 d = distance;
