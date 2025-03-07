@@ -21,6 +21,7 @@ public class Sphere extends MarchingObject {
         return LinearAlgebra.magnitude(p) - 1.0d;
     }
 
+    @Override
     public double[] getNormal(double[] p) {
         p = this.transformPoint(p);
 

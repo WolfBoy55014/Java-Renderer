@@ -7,7 +7,6 @@ import java.awt.*;
 
 public class MarchingRenderer extends Renderer {
 
-    private int MAX_STEPS;
     private final double MAX_DISTANCE;
     private final double MIN_DISTANCE;
 
@@ -28,22 +27,20 @@ public class MarchingRenderer extends Renderer {
 
         // March along the ray
         double distance = 0.0d;
-        while (distance < this.MAX_DISTANCE) {
+        while (distance < MAX_DISTANCE) {
             double[] p = ray.getPosition();
             double d = this.scene.getDistance(p);
 
-            double[] light_dir = new double[]{0.0d, 0.0d, 1.0d};
-            double[] n = this.scene.getNormal(p);
-            double illumination = Math.min(Math.max(0.2d, LinearAlgebra.dot(n, light_dir)), 1.0d);
-
-
-            distance += d;
             ray.step(d);
+            distance += d;
 
             if (d < this.MIN_DISTANCE) {
                 color = this.scene.getNearestObject(ray.getPosition()).getMaterial().getColor();
-                color = new Color((int) (color.getRed() * illumination), (int) (color.getGreen() * illumination), (int) (color.getBlue() * illumination));
-                break;
+                double[] light_dir = new double[]{0.0d, 0.0d, 1.0d};
+                double[] n = this.scene.getNormal(p);
+                double illumination = Math.min(Math.max(0.2d, LinearAlgebra.dot(n, light_dir)), 1.0d);
+
+                return new Color((int) (color.getRed() * illumination), (int) (color.getGreen() * illumination), (int) (color.getBlue() * illumination));
             }
         }
 

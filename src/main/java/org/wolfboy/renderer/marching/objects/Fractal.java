@@ -43,9 +43,24 @@ public class Fractal extends MarchingObject {
 
 
     public double getDistance(double[] p) {
+        p = this.transformPoint(p);
+
         double[] b = {1.0f, 1.0f, 1.0f};
         double d = sdBox(p, b);
-        double c = sdCross(LinearAlgebra.mul(p, 3.0d)) / 3.0d;
-        return Math.max(d, -c);
+
+        double s = 1.0d;
+        for (int m = 0; m < 3; m++) {
+            // vec3 a = mod( p*s, 2.0 )-1.0;
+            double[] a = new double[]{((p[0] * s) % 2.0d) - 0.1d, ((p[1] * s) % 2.0d) - 0.1d, ((p[2] * s) % 2.0d) - 0.1d};
+            s *= 3.0;
+            // vec3 r = abs(1.0 - 3.0*abs(a));
+            double[] r = new double[]{1.0d - 3.0d * Math.abs(a[0]), 1.0d - 3.0d * Math.abs(a[1]), 1.0d - 3.0d * Math.abs(a[2])};
+
+            double c = sdCross(r) / s;
+
+            d = Math.max(d, c);
+        }
+
+        return d;
     }
 }

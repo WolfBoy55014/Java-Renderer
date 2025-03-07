@@ -5,6 +5,7 @@ import org.wolfboy.renderer.marching.MarchingCamera;
 import org.wolfboy.renderer.marching.MarchingRenderer;
 import org.wolfboy.renderer.marching.MarchingScene;
 import org.wolfboy.renderer.marching.objects.MarchingObject;
+import org.wolfboy.renderer.marching.objects.primitive.Plane;
 import org.wolfboy.renderer.marching.objects.primitive.Sphere;
 import org.wolfboy.ui.UI;
 
@@ -19,11 +20,12 @@ public class Main {
         final int height = 320;
 
         UI ui = new UI(width, height);
-        MarchingCamera camera = new MarchingCamera(width, height, 2.0d * Math.PI);
-        camera.setRotation(0.0d, 0.0d, 0.0d);
-        camera.setPosition(0.0d, 0.0d, 0.0d);
+        MarchingCamera camera = new MarchingCamera(width, height, 1.2d);
+        camera.setRotation(-0.3d, 0.0d, 0.0d);
+        camera.setPosition(0.0d, -10.0d, 5.0d);
 
-        MarchingObject[] objects = new MarchingObject[4];
+        MarchingObject[] objects = new MarchingObject[5];
+        objects[4] = new Plane(new Material(new Color(255, 255, 255)), new double[]{0.0d, 0.0d, -1.0d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
         objects[3] = new Sphere(new Material(new Color(105, 234, 156)), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
         objects[2] = new Sphere(new Material(new Color(186, 204, 109)), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
         objects[1] = new Sphere(new Material(new Color(200, 128, 228)), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
@@ -34,19 +36,14 @@ public class Main {
 
         MarchingRenderer renderer = new MarchingRenderer(scene, camera);
 
-        double i = 0;
+        Runnable[] tasks = new Runnable[width];
 
         while (true) {
-            i += Math.PI / 64.0d;
-
-            Runnable[] tasks = new Runnable[width];
-
             for (int x = 0; x < width; x++) {
                 tasks[x] = new RenderTask(x, renderer, ui);
             }
 
-            ExecutorService pool = Executors.newFixedThreadPool(12);
-
+            ExecutorService pool = Executors.newFixedThreadPool(8);
             long startTime = System.nanoTime();
 
             for (int x = 0; x < width; x++) {
@@ -63,11 +60,16 @@ public class Main {
 
             long duration = (endTime - startTime);  // divide by 1000000 to get milliseconds.
 
-            // System.out.println("Time taken: " + duration / 1000000 + "ms");
+            System.out.println("Time taken: " + duration / 1000000 + "ms");
 
             ui.display();
 
-            renderer.getCamera().setRotation(i, i, i);
+            // System.out.println(ui.getMousePos());
+            double mouseX = Math.min(Math.max(ui.getMousePos().getX(), 0), width);
+            double mouseY = Math.min(Math.max(ui.getMousePos().getY(), 0), height);
+            double cameraYaw = ((mouseX / width) - 0.5d) * 1.2d;
+            double cameraPitch = ((mouseY / height) - 0.5d) * 1.2d;
+            camera.setRotation(cameraPitch, 0.0, cameraYaw);
         }
     }
 }

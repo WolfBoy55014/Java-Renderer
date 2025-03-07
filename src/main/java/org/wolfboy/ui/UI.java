@@ -2,6 +2,8 @@ package org.wolfboy.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 public class UI {
@@ -47,4 +49,14 @@ public class UI {
     }
 
 
+        return componentPoint;
+    }
+
+    public int getWidth() {
+        return this.img.getWidth();
+    }
+
+    public int getHeight() {
+        return this.img.getHeight();
+    }
 }
