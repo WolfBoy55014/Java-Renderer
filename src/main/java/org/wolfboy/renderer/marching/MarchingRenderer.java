@@ -19,7 +19,23 @@ public class MarchingRenderer extends Renderer {
 
         MAX_DISTANCE = 100.0d;
         MIN_DISTANCE = 0.001d;
-        SPP = 50;
+        SPP = 100;
+    }
+
+    private Ray march(Ray ray, double maxDistance) {
+        double distance = 0.0d;
+        while (distance < maxDistance) {
+            double[] p = ray.getPosition();
+            double d = this.scene.getDistance(p);
+
+            ray.step(d);
+            distance += d;
+
+            if (d < this.MIN_DISTANCE) {
+                return ray;
+            }
+        }
+        return ray;
     }
 
     public Color renderPixel(int x, int y) {
@@ -28,27 +44,38 @@ public class MarchingRenderer extends Renderer {
         for (int s = 0; s < SPP; s++) {
             Ray ray = this.camera.getRayAtPixel(x, y);
 
-            // March along the ray
-            double distance = 0.0d;
-            while (distance < MAX_DISTANCE) {
-                double[] p = ray.getPosition();
-                double d = this.scene.getDistance(p);
+            ray = this.march(ray, MAX_DISTANCE);
 
-                ray.step(d);
-                distance += d;
-
-                if (d < this.MIN_DISTANCE) {
-                    Color objColor = this.scene.getNearestObject(ray.getPosition()).getMaterial().getColor();
-                    double[] light_dir = new double[]{0.0d, 0.0d, 1.0d};
-                    double[] n = this.scene.getNormal(p);
-                    double illumination = Math.min(Math.max(0.2d, LinearAlgebra.dot(n, light_dir)), 1.0d);
-
-                    color[0] += objColor.getRed() * illumination;
-                    color[1] += objColor.getGreen() * illumination;
-                    color[2] += objColor.getBlue() * illumination;
-                    break;
-                }
+            if (ray.getDistance() >= MAX_DISTANCE) {
+                continue;
             }
+
+            double[] p = ray.getPosition();
+
+            Color objColor = this.scene.getNearestObject(ray.getPosition()).getMaterial().getColor();
+            double[] light_pos = new double[]{0.0d, 0.0d, 5.0d};
+            double[] light_dir = LinearAlgebra.normalize(LinearAlgebra.sub(light_pos, p));
+            double[] n = this.scene.getNormal(p);
+
+            double illumination = Math.min(LinearAlgebra.dot(n, light_dir), 1.0d);
+
+            // Calculate shadows
+            // float d = RayMarch(p+n*SURF_DIST*2., l);
+            ray.setDirection(n);
+            ray.step(this.MIN_DISTANCE * 2.0d);
+            ray.setDirection(light_dir);
+            ray.resetDistance();
+
+            ray = this.march(ray, LinearAlgebra.distance(p, light_pos));
+            if (ray.getDistance() < LinearAlgebra.distance(p, light_pos)) {
+                illumination *= 0.2d;
+            }
+
+            illumination = Math.max(illumination, 0.2d);
+
+            color[0] += objColor.getRed() * illumination;
+            color[1] += objColor.getGreen() * illumination;
+            color[2] += objColor.getBlue() * illumination;
         }
         color[0] /= SPP;
         color[1] /= SPP;

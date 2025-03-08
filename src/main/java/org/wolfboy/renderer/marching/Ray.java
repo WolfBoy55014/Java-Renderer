@@ -22,12 +22,24 @@ public class Ray {
         return distance;
     }
 
+    public void resetDistance() {
+        this.distance = 0.0f;
+    }
+
     public double[] getPosition() {
         return position;
     }
 
     public double[] getDirection() {
         return direction;
+    }
+
+    public void setPosition(double[] position) {
+        this.position = position;
+    }
+
+    public void setDirection(double[] direction) {
+        this.direction = direction;
     }
 
     public int getSteps() {
