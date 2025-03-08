@@ -193,4 +193,11 @@ public class LinearAlgebra {
     public static double[] abs(double[] vector) {
         return new double[]{Math.abs(vector[0]), Math.abs(vector[1]), Math.abs(vector[2])};
     }
+
+    public static double[] mod(double[] vector, double value) {
+        //  x - y * floor(x / y)
+        return new double[]{vector[0] - value * Math.floor(vector[0] / value),
+                vector[1] - value * Math.floor(vector[1] / value),
+                vector[2] - value * Math.floor(vector[2] / value)};
+    }
 }

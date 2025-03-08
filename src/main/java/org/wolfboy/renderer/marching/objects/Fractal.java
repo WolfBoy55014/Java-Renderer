@@ -41,36 +41,10 @@ public class Fractal extends MarchingObject {
         return lengthOfMax + minOfMax;
     }
 
-
-    /*public double getDistance(double[] p) {
-        p = this.transformPoint(p);
-
-        double[] b = {1.0f, 1.0f, 1.0f};
-        double d = sdBox(p, b);
-        double s = 1.0d;
-
-        for (int i = 0; i < 4; i++) {
-            s *= 3.0d;
-            double r = (1.0d / (3.0d * Math.pow(2.0d, i - 1)));
-            if (i != 0) {
-                if (i == 1) {
-                    r += (1.0d / 3.0d);
-                }
-                p = LinearAlgebra.add(p, r);
-            }
-            // vec2 r = p - s*round(p/s);
-            double[] g = LinearAlgebra.sub(p, LinearAlgebra.mul(LinearAlgebra.round(LinearAlgebra.div(p, s)), s));
-            double c = sdCross(LinearAlgebra.mul(g, s)) / s;
-            d = Math.max(d, -c);
-        }
-        return d;
-    }*/
-
+    @Override
     public double getDistance(double[] p) {
-        p = this.transformPoint(p);
-
-        double d = sdBox(p, new double[]{1.0d, 1.0d, 1.0d});
-
+//        float d = sdBox(p,vec3(1.0));
+//
 //        float s = 1.0;
 //        for( int m=0; m<3; m++ )
 //        {
@@ -81,6 +55,21 @@ public class Fractal extends MarchingObject {
 //            float c = sdCross(r)/s;
 //            d = max(d,c);
 //        }
+//
+//        return vec3(d,0.0,0.0);
+
+        double d = sdBox(p, new double[]{1.0f, 1.0f, 1.0f});
+        // double d = Double.MIN_VALUE;
+
+        double s = 1.0;
+        for (int m = 0; m < 6; m++) {
+            double[] a = LinearAlgebra.sub(LinearAlgebra.mod(LinearAlgebra.mul(p, s), 2.0), 1.0);
+            s *= 3.0;
+            double[] r = LinearAlgebra.sub(new double[]{1.0, 1.0, 1.0}, LinearAlgebra.mul(LinearAlgebra.abs(a), 3.0));
+
+            double c = sdCross(r) / s;
+            d = Math.max(d, c);
+        }
 
         return d;
     }

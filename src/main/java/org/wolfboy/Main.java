@@ -21,9 +21,9 @@ public class Main {
         final int height = 1080;
 
         UI ui = new UI(width, height);
-        MarchingCamera camera = new MarchingCamera(width, height, 1.2d);
-        camera.setRotation(-0.4d, 0.0d, 0.0d);
-        camera.setPosition(0.0d, -5.0d, 2.0d);
+        MarchingCamera camera = new MarchingCamera(width, height, .8d);
+        camera.setRotation(-0.4d, 0.0d, 0.2d);
+        camera.setPosition(0.0d, -2.0d, 2.0d);
 
         MarchingObject[] objects = new MarchingObject[5];
         // objects[4] = new Plane(new Material(new Color(255, 255, 255)), new double[]{0.0d, 0.0d, -1.0d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
