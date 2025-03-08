@@ -1,10 +1,13 @@
 package org.wolfboy.renderer.generic;
 
 import org.wolfboy.LinearAlgebra;
+import org.wolfboy.renderer.marching.Ray;
 
 public class Camera {
 
     protected double FOV;
+    protected double focalDistance;
+    protected double aperture;
     protected int width;
     protected int height;
 
@@ -15,6 +18,16 @@ public class Camera {
         this.width = width;
         this.height = height;
         this.FOV = FOV;
+        this.focalDistance = Double.MAX_VALUE;
+        this.aperture = 0.0d;
+    }
+
+    public Camera(int width, int height, double FOV, double focalDistance, double aperture) {
+        this.width = width;
+        this.height = height;
+        this.FOV = FOV;
+        this.focalDistance = focalDistance;
+        this.aperture = aperture;
     }
 
     public int getHeight() {
@@ -57,9 +70,10 @@ public class Camera {
         return position;
     }
 
-    public double[] getDirectionAtPixel(int x, int y) {
+    public Ray getRayAtPixel(int x, int y) {
 
         double[] direction = new double[3];
+        double[] position = this.position;
 
         // Initial direction
 
@@ -80,13 +94,12 @@ public class Camera {
         direction[2] = -Math.sin(phi);
         direction[0] = -Math.sin(theta) * Math.cos(phi);
 
-        //double rayX = Math.sin(theta) * Math.cos(phi);
-        //double rayY = Math.sin(phi);
-        //double rayZ = Math.cos(theta) * Math.cos(phi);
-
-        //double rayX = Math.cos(theta) * Math.cos(phi); //Swapped sin and cos here.
-        //double rayY = Math.sin(phi);
-        //double rayZ = -Math.sin(theta) * Math.cos(phi); // Added a negative sign here.
+        // Calculate DOF
+        if (this.aperture > 0.0d) {
+            double[] convergence = LinearAlgebra.add(this.position, LinearAlgebra.mul(direction, this.focalDistance));
+            position = LinearAlgebra.add(position, LinearAlgebra.mul(new double[]{Math.random(), 0.0d, Math.random()}, this.aperture));
+            direction = LinearAlgebra.sub(convergence, position);
+        }
 
         // System.out.println(Arrays.toString(direction));
 
@@ -105,7 +118,7 @@ public class Camera {
 
         // System.out.println(Arrays.toString(direction));
 
-        return LinearAlgebra.normalize(direction);
+        return new Ray(direction, position);
     }
 
     public int[] directionToPixel(double[] direction) {

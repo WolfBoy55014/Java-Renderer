@@ -11,27 +11,36 @@ import org.wolfboy.renderer.marching.objects.primitive.Sphere;
 import org.wolfboy.ui.UI;
 
 import java.awt.*;
+import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main {
 
     public static void main(String[] args) {
-        final int width = 1920;
-        final int height = 1080;
+        // 8k (7680 * 4320)
+        // 4k (3840 * 2160)
+        // HD (1920 * 1080)
+        // 720p (1280 * 720)
+        // 480p (854 * 480)
+        // 360p (640 * 360)
+
+        final int width = 640;
+        final int height = 360;
+        final boolean save = false;
 
         UI ui = new UI(width, height);
-        MarchingCamera camera = new MarchingCamera(width, height, .8d);
-        camera.setRotation(-0.4d, 0.0d, 0.2d);
-        camera.setPosition(0.0d, -2.0d, 2.0d);
+        MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.55, 0.4d);
+        camera.setRotation(-0.5d, 0.0d, 0.2d);
+        camera.setPosition(-1.0d, -7.0d, 3.0d);
 
         MarchingObject[] objects = new MarchingObject[5];
-        // objects[4] = new Plane(new Material(new Color(255, 255, 255)), new double[]{0.0d, 0.0d, -1.0d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
-        // objects[3] = new Sphere(new Material(new Color(105, 234, 156)), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
-        // objects[2] = new Sphere(new Material(new Color(186, 204, 109)), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
-        // objects[1] = new Sphere(new Material(new Color(200, 128, 228)), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
-        // objects[0] = new Sphere(new Material(new Color(121, 216, 225)), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
-        objects[0] = new Fractal(new Material(new Color(121, 225, 194)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{0.0d, 0.0d, 0.0d}, new double[]{1.0d, 1.0d, 1.0d});
+        objects[4] = new Plane(new Material(new Color(101, 101, 101)), new double[]{0.0d, 0.0d, -1.0d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
+        objects[3] = new Sphere(new Material(new Color(105, 234, 156)), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
+        objects[2] = new Sphere(new Material(new Color(186, 204, 109)), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
+        objects[1] = new Sphere(new Material(new Color(200, 128, 228)), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[0] = new Sphere(new Material(new Color(121, 216, 225)), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
+        // objects[0] = new Fractal(new Material(new Color(121, 225, 194)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{0.0d, 0.0d, 0.0d}, new double[]{1.0d, 1.0d, 1.0d});
 
         MarchingScene scene = new MarchingScene(objects);
 
@@ -74,6 +83,16 @@ public class Main {
             double cameraYaw = ((mouseX / width) - 0.5d) * 1.2d;
             double cameraPitch = ((mouseY / height) - 0.5d) * 1.2d;
             camera.setRotation(cameraPitch, 0.0, cameraYaw);
+        }
+
+        if (save) {
+            File file = new File("render.png");
+
+            for (int r = 1; file.exists(); r++) {
+                file = new File(String.format("render_%d.png", r));
+            }
+
+            ui.saveRender(file.getName());
         }
     }
 }

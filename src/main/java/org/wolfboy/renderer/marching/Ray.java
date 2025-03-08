@@ -7,6 +7,7 @@ public class Ray {
     private double[] direction;
     private double[] position;
     private double distance = 0.0f;
+    private int steps = 0;
 
     public Ray(double[] direction, double[] position) {
         this.direction = normalize(direction);
@@ -29,12 +30,15 @@ public class Ray {
         return direction;
     }
 
+    public int getSteps() {
+        return steps;
+    }
+
     public void step(double distance) {
         double[] deltaPose = mul(this.direction, distance);
 
         this.position = add(this.position, deltaPose);
         this.distance += distance;
+        this.steps++;
     }
-
-
 }

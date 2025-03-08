@@ -1,10 +1,13 @@
 package org.wolfboy.ui;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class UI {
 
@@ -62,5 +65,13 @@ public class UI {
 
     public int getHeight() {
         return this.img.getHeight();
+    }
+
+    public void saveRender(String filename) {
+        try {
+            ImageIO.write(this.img, "png", new File(filename));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
