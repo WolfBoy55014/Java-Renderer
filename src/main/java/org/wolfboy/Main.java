@@ -35,11 +35,11 @@ public class Main {
         camera.setPosition(-1.0d, -7.0d, 3.0d);
 
         MarchingObject[] objects = new MarchingObject[5];
-        objects[4] = new Plane(new Material(new Color(255, 255, 255)), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
-        objects[3] = new Sphere(new Material(new Color(105, 234, 156)), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[2] = new Sphere(new Material(new Color(186, 204, 109)), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[1] = new Sphere(new Material(new Color(200, 128, 228)), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
-        objects[0] = new Sphere(new Material(new Color(121, 216, 225)), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[4] = new Plane(new Material(new double[]{255, 255, 255}), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
+        objects[3] = new Sphere(new Material(new double[]{105, 234, 156}), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
+        objects[2] = new Sphere(new Material(new double[]{186, 204, 109}), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
+        objects[1] = new Sphere(new Material(new double[]{200, 128, 228}), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[0] = new Sphere(new Material(new double[]{121, 216, 225}), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
         // objects[0] = new Fractal(new Material(new Color(121, 225, 194)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{0.0d, 0.0d, 0.0d}, new double[]{1.0d, 1.0d, 1.0d});
 
         MarchingScene scene = new MarchingScene(objects);

@@ -4,23 +4,23 @@ import java.awt.*;
 
 public class Material {
 
-    protected Color color;
+    protected double[] color;
     protected float reflectivity;
     protected float transparency;
     protected float refractiveIndex;
 
-    public Material(Color color, float reflectivity, float transparency, float refractiveIndex) {
+    public Material(double[] color, float reflectivity, float transparency, float refractiveIndex) {
         this.color = color;
         this.reflectivity = reflectivity;
         this.transparency = transparency;
         this.refractiveIndex = refractiveIndex;
     }
 
-    public Material(Color color) {
+    public Material(double[] color) {
         this(color, 0, 0, 0);
     }
 
-    public Color getColor() {
+    public double[] getColor() {
         return this.color;
     }
 

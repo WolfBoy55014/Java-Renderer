@@ -19,7 +19,7 @@ public class MarchingRenderer extends Renderer {
 
         MAX_DISTANCE = 100.0d;
         MIN_DISTANCE = 0.001d;
-        SPP = 100;
+        SPP = 10;
     }
 
     private Ray march(Ray ray, double maxDistance) {
@@ -52,7 +52,7 @@ public class MarchingRenderer extends Renderer {
 
             double[] p = ray.getPosition();
 
-            Color objColor = this.scene.getNearestObject(ray.getPosition()).getMaterial().getColor();
+            double[] objColor = this.scene.getNearestObject(ray.getPosition()).getMaterial().getColor();
             double[] light_pos = new double[]{0.0d, 0.0d, 5.0d};
             double[] light_dir = LinearAlgebra.normalize(LinearAlgebra.sub(light_pos, p));
             double[] n = this.scene.getNormal(p);
@@ -73,9 +73,9 @@ public class MarchingRenderer extends Renderer {
 
             illumination = Math.max(illumination, 0.2d);
 
-            color[0] += objColor.getRed() * illumination;
-            color[1] += objColor.getGreen() * illumination;
-            color[2] += objColor.getBlue() * illumination;
+            color[0] += objColor[0] * illumination;
+            color[1] += objColor[1] * illumination;
+            color[2] += objColor[2] * illumination;
         }
         color[0] /= SPP;
         color[1] /= SPP;
