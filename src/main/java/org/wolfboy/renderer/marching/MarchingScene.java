@@ -1,15 +1,17 @@
 package org.wolfboy.renderer.marching;
 
 import org.wolfboy.renderer.generic.Scene;
+import org.wolfboy.renderer.marching.lights.MarchingLight;
 import org.wolfboy.renderer.marching.objects.MarchingObject;
 
 public class MarchingScene extends Scene {
 
     private final MarchingObject[] objects;
 
-    public MarchingScene(MarchingObject[] objects) {
-        super(objects);
+    public MarchingScene(MarchingObject[] objects, MarchingLight[] lights) {
+        super(objects, lights);
         this.objects = objects;
+        this.lights = lights;
     }
 
     public double getDistance(double[] p) {
