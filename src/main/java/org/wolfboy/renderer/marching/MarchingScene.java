@@ -7,9 +7,9 @@ import org.wolfboy.renderer.marching.objects.MarchingObject;
 public class MarchingScene extends Scene {
 
     private final MarchingObject[] objects;
+    private final MarchingLight[] lights;
 
     public MarchingScene(MarchingObject[] objects, MarchingLight[] lights) {
-        super(objects, lights);
         this.objects = objects;
         this.lights = lights;
     }
@@ -45,5 +45,9 @@ public class MarchingScene extends Scene {
             }
         }
         return nearest;
+    }
+
+    public MarchingLight[] getLights() {
+        return this.lights;
     }
 }

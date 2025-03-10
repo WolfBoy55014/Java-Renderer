@@ -200,4 +200,20 @@ public class LinearAlgebra {
                 vector[1] - value * Math.floor(vector[1] / value),
                 vector[2] - value * Math.floor(vector[2] / value)};
     }
+
+    public double[] sphericalToCartesian(double[] vector) {
+        double x = vector[2] * Math.sin(vector[0]) * Math.cos(vector[1]);
+        double y = vector[2] * Math.sin(vector[0]) * Math.sin(vector[1]);
+        double z = vector[2] * Math.cos(vector[0]);
+
+        return new double[]{x, y, z};
+    }
+
+    public double[] cartesianToSpherical(double[] vector) {
+        double r = magnitude(vector);
+        double theta = Math.acos(vector[2] / r);
+        double phi = Math.atan2(vector[1], vector[0]);
+
+        return new double[]{theta, phi, r};
+    }
 }

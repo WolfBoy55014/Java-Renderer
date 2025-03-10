@@ -2,6 +2,7 @@ package org.wolfboy.renderer.marching;
 
 import org.wolfboy.LinearAlgebra;
 import org.wolfboy.renderer.generic.Renderer;
+import org.wolfboy.renderer.marching.lights.MarchingLight;
 
 import java.awt.*;
 
@@ -19,7 +20,7 @@ public class MarchingRenderer extends Renderer {
 
         MAX_DISTANCE = 100.0d;
         MIN_DISTANCE = 0.001d;
-        SPP = 10;
+        SPP = 500;
     }
 
     private Ray march(Ray ray, double maxDistance) {
@@ -51,31 +52,32 @@ public class MarchingRenderer extends Renderer {
             }
 
             double[] p = ray.getPosition();
-
-            double[] objColor = this.scene.getNearestObject(ray.getPosition()).getMaterial().getColor();
-            double[] light_pos = new double[]{0.0d, 0.0d, 5.0d};
-            double[] light_dir = LinearAlgebra.normalize(LinearAlgebra.sub(light_pos, p));
             double[] n = this.scene.getNormal(p);
+            double[] albedo = LinearAlgebra.div(this.scene.getNearestObject(ray.getPosition()).getMaterial().getColor(), Math.PI);
+            double illumination = 0.0d;
 
-            double illumination = Math.min(LinearAlgebra.dot(n, light_dir), 1.0d);
+            // Calculate illumination per light
+            for (MarchingLight light : this.scene.getLights()) {
+                if (light == null) {
+                    continue;
+                }
 
-            // Calculate shadows
-            // float d = RayMarch(p+n*SURF_DIST*2., l);
-            ray.setDirection(n);
-            ray.step(this.MIN_DISTANCE * 2.0d);
-            ray.setDirection(light_dir);
-            ray.resetDistance();
+                double light_dist = Math.min(MAX_DISTANCE, light.getLightDistance(p));
+                double[] light_dir = light.getLightDir(p);
 
-            ray = this.march(ray, LinearAlgebra.distance(p, light_pos));
-            if (ray.getDistance() < LinearAlgebra.distance(p, light_pos)) {
-                illumination *= 0.2d;
+                // Calculate shadows
+                // float d = RayMarch(p+n*SURF_DIST*2., l);
+                Ray shadowRay = new Ray(light_dir, LinearAlgebra.add(p, LinearAlgebra.mul(n, this.MIN_DISTANCE * 2.0d)));
+
+                shadowRay = this.march(shadowRay, light_dist);
+                if (shadowRay.getDistance() >= light_dist) {
+                    illumination += Math.max(LinearAlgebra.dot(n, light_dir), 0.0d) * light.getIntensity();
+                }
             }
 
-            illumination = Math.max(illumination, 0.2d);
-
-            color[0] += objColor[0] * illumination;
-            color[1] += objColor[1] * illumination;
-            color[2] += objColor[2] * illumination;
+            color[0] += albedo[0] * illumination;
+            color[1] += albedo[1] * illumination;
+            color[2] += albedo[2] * illumination;
         }
         color[0] /= SPP;
         color[1] /= SPP;
@@ -97,6 +99,6 @@ public class MarchingRenderer extends Renderer {
         //     color = new Color(0, 0, 255);
         // }
 
-        return new Color((int) color[0], (int) color[1], (int) color[2]);
+        return new Color((int) (color[0]), (int) (color[1]), (int) (color[2]));
     }
 }
