@@ -171,6 +171,11 @@ public class LinearAlgebra {
     }
 
     public static double[] rot(double[] vector, double angle) {
+        // Rotation is expensive, so check if we need to first
+        if (angle == 0.0d) {
+            return vector;
+        }
+
         double s = Math.sin(angle);
         double c = Math.cos(angle);
         double[][] rot = new double[][]{{c, -s}, {s, c}};
@@ -233,13 +238,19 @@ public class LinearAlgebra {
         p[0] = yaw[0];
         p[1] = yaw[1];
 
-        p = LinearAlgebra.div(p, scale);
+        if (scale[0] != 1.0d && scale[1] != 1.0d && scale[2] != 1.0d) {
+            p = LinearAlgebra.div(p, scale);
+        }
         return p;
     }
 
+    // TODO check to see if the rotational orders should be swapped between toLocal and toGlobal
     public static double[] toGlobal(double[] p, double[] position, double[] rotation, double[] scale) {
         // Transform point to account for object position, rotation, and scale
-        p = LinearAlgebra.mul(p, scale);
+
+        if (scale[0] != 1.0d && scale[1] != 1.0d && scale[2] != 1.0d) {
+            p = LinearAlgebra.mul(p, scale);
+        }
 
         double[] yaw = LinearAlgebra.rot(new double[]{p[0], p[1]}, -rotation[2]);
         p[0] = yaw[0];

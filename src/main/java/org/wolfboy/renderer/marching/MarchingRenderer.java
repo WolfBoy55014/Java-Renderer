@@ -20,7 +20,7 @@ public class MarchingRenderer extends Renderer {
 
         MAX_DISTANCE = 100.0d;
         MIN_DISTANCE = 0.001d;
-        SPP = 500;
+        SPP = 100;
     }
 
     private Ray march(Ray ray, double maxDistance) {

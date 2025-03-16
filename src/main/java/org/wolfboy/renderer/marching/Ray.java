@@ -51,6 +51,6 @@ public class Ray {
 
         this.position = add(this.position, deltaPose);
         this.distance += distance;
-        this.steps++;
+//        this.steps++;
     }
 }
