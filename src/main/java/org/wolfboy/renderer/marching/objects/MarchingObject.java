@@ -42,12 +42,6 @@ public class MarchingObject extends Object {
     }
 
     public double[] transformPoint(double[] p) {
-        // Transform point to account for object position, rotation, and scale
-        p = LinearAlgebra.sub(p, this.position);
-
-        // TODO: Implement rotation
-
-        p = LinearAlgebra.div(p, this.scale);
-        return p;
+        return LinearAlgebra.toLocal(p, this.position, this.rotation, this.scale);
     }
 }

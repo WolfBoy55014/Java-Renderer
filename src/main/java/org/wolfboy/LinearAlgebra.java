@@ -201,7 +201,7 @@ public class LinearAlgebra {
                 vector[2] - value * Math.floor(vector[2] / value)};
     }
 
-    public double[] sphericalToCartesian(double[] vector) {
+    public static double[] sphericalToCartesian(double[] vector) {
         double x = vector[2] * Math.sin(vector[0]) * Math.cos(vector[1]);
         double y = vector[2] * Math.sin(vector[0]) * Math.sin(vector[1]);
         double z = vector[2] * Math.cos(vector[0]);
@@ -209,11 +209,51 @@ public class LinearAlgebra {
         return new double[]{x, y, z};
     }
 
-    public double[] cartesianToSpherical(double[] vector) {
+    public static double[] cartesianToSpherical(double[] vector) {
         double r = magnitude(vector);
         double theta = Math.acos(vector[2] / r);
         double phi = Math.atan2(vector[1], vector[0]);
 
         return new double[]{theta, phi, r};
+    }
+
+    public static double[] toLocal(double[] p, double[] position, double[] rotation, double[] scale) {
+        // Transform point to account for object position, rotation, and scale
+        p = LinearAlgebra.sub(p, position);
+
+        double[] roll = LinearAlgebra.rot(new double[]{p[0], p[2]}, rotation[1]);
+        p[0] = roll[0];
+        p[2] = roll[1];
+
+        double[] pitch = LinearAlgebra.rot(new double[]{p[1], p[2]}, -rotation[0]);
+        p[1] = pitch[0];
+        p[2] = pitch[1];
+
+        double[] yaw = LinearAlgebra.rot(new double[]{p[0], p[1]}, rotation[2]);
+        p[0] = yaw[0];
+        p[1] = yaw[1];
+
+        p = LinearAlgebra.div(p, scale);
+        return p;
+    }
+
+    public static double[] toGlobal(double[] p, double[] position, double[] rotation, double[] scale) {
+        // Transform point to account for object position, rotation, and scale
+        p = LinearAlgebra.mul(p, scale);
+
+        double[] yaw = LinearAlgebra.rot(new double[]{p[0], p[1]}, -rotation[2]);
+        p[0] = yaw[0];
+        p[1] = yaw[1];
+
+        double[] pitch = LinearAlgebra.rot(new double[]{p[1], p[2]}, rotation[0]);
+        p[1] = pitch[0];
+        p[2] = pitch[1];
+
+        double[] roll = LinearAlgebra.rot(new double[]{p[0], p[2]}, -rotation[1]);
+        p[0] = roll[0];
+        p[2] = roll[1];
+
+        p = LinearAlgebra.add(p, position);
+        return p;
     }
 }

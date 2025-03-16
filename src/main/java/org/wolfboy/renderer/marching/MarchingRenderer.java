@@ -54,7 +54,7 @@ public class MarchingRenderer extends Renderer {
             double[] p = ray.getPosition();
             double[] n = this.scene.getNormal(p);
             double[] albedo = LinearAlgebra.div(this.scene.getNearestObject(ray.getPosition()).getMaterial().getColor(), Math.PI);
-            double illumination = 0.0d;
+            double[] illumination = new double[]{0.0d, 0.0d, 0.0d};
 
             // Calculate illumination per light
             for (MarchingLight light : this.scene.getLights()) {
@@ -71,13 +71,15 @@ public class MarchingRenderer extends Renderer {
 
                 shadowRay = this.march(shadowRay, light_dist);
                 if (shadowRay.getDistance() >= light_dist) {
-                    illumination += Math.max(LinearAlgebra.dot(n, light_dir), 0.0d) * light.getIntensity();
+                    illumination[0] += Math.max(LinearAlgebra.dot(n, light_dir), 0.0d) * light.getIntensity() * light.getColor()[0];
+                    illumination[1] += Math.max(LinearAlgebra.dot(n, light_dir), 0.0d) * light.getIntensity() * light.getColor()[1];
+                    illumination[2] += Math.max(LinearAlgebra.dot(n, light_dir), 0.0d) * light.getIntensity() * light.getColor()[2];
                 }
             }
 
-            color[0] += albedo[0] * illumination;
-            color[1] += albedo[1] * illumination;
-            color[2] += albedo[2] * illumination;
+            color[0] += albedo[0] * illumination[0];
+            color[1] += albedo[1] * illumination[1];
+            color[2] += albedo[2] * illumination[2];
         }
         color[0] /= SPP;
         color[1] /= SPP;
