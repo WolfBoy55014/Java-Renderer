@@ -12,9 +12,11 @@ import org.wolfboy.renderer.marching.objects.MarchingObject;
 import org.wolfboy.renderer.marching.objects.primitive.Plane;
 import org.wolfboy.renderer.marching.objects.primitive.Sphere;
 import org.wolfboy.ui.UI;
+import uk.ac.manchester.tornado.api.TornadoDeviceMap;
 
 import java.awt.*;
 import java.io.File;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -28,8 +30,8 @@ public class Main {
         // 480p (854 * 480)
         // 360p (640 * 360)
 
-        final int width = 320;
-        final int height = 180;
+        final int width = 1;
+        final int height = 1;
         final boolean save = false;
 
         UI ui = new UI(width, height);
@@ -51,6 +53,9 @@ public class Main {
         objects[0] = new Sphere(new Material(new Color(121, 216, 225)), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
         // objects[0] = new Fractal(new Material(new Color(121, 225, 194)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{0.0d, 0.0d, 0.0d}, new double[]{1.0d, 1.0d, 1.0d});
 
+        TornadoDeviceMap map = new TornadoDeviceMap();
+        map.getAllBackends().getFirst().getName();
+
         MarchingScene scene = new MarchingScene(objects, lights);
 
         MarchingRenderer renderer = new MarchingRenderer(scene, camera);
@@ -65,11 +70,20 @@ public class Main {
                 tasks[x] = new RenderTask(x, renderer, ui);
             }
 
-            ExecutorService pool = Executors.newFixedThreadPool(8);
+            ExecutorService pool = Executors.newFixedThreadPool(1);
+
+            int[] order = new int[width];
+
+            for (int u = 0; u < width; u++) {
+                order[u] = u;
+            }
+
+            order = shuffleArray(order);
+
             long startTime = System.nanoTime();
 
             for (int x = 0; x < width; x++) {
-                pool.execute(tasks[x]);
+                pool.execute(tasks[order[x]]);
             }
 
             pool.shutdown();
@@ -104,6 +118,18 @@ public class Main {
             ui.saveRender(file.getName());
         }
     }
+
+    static int[] shuffleArray(int[] ar) {
+        Random rnd = new Random();
+        for (int i = ar.length - 1; i > 0; i--) {
+            int index = rnd.nextInt(i + 1);
+            // Simple swap
+            int a = ar[index];
+            ar[index] = ar[i];
+            ar[i] = a;
+        }
+        return ar;
+    }
 }
 
 class RenderTask implements Runnable {
@@ -121,7 +147,7 @@ class RenderTask implements Runnable {
         for (int y = 0; y < renderer.getCamera().getHeight(); y++) {
             Color color = renderer.renderPixel(x, y);
             ui.drawPixel(x, y, color);
-            ui.display();
         }
+        ui.display();
     }
 }

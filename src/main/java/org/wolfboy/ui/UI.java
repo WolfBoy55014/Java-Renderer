@@ -30,7 +30,7 @@ public class UI {
 
         this.frame.setVisible(true);
         Insets insets = frame.getInsets();
-        this.frame.setSize(width + insets.left + insets.right, height + insets.top + insets.bottom);
+        // this.frame.setSize(width + insets.left + insets.right, height + insets.top + insets.bottom);
 
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
