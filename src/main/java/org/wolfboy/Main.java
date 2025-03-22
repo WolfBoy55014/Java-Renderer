@@ -7,6 +7,7 @@ import org.wolfboy.renderer.marching.MarchingScene;
 import org.wolfboy.renderer.marching.lights.DiskLight;
 import org.wolfboy.renderer.marching.lights.MarchingLight;
 import org.wolfboy.renderer.marching.objects.MarchingObject;
+import org.wolfboy.renderer.marching.objects.primitive.Box;
 import org.wolfboy.renderer.marching.objects.primitive.Plane;
 import org.wolfboy.renderer.marching.objects.primitive.Sphere;
 import org.wolfboy.ui.UI;
@@ -26,22 +27,24 @@ public class Main {
         // 480p (854 * 480)
         // 360p (640 * 360)
 
-        final int width = 1920;
-        final int height = 1080;
+        final int width = 7680;
+        final int height = 4320;
         final boolean save = false;
 
         UI ui = new UI(width, height);
-        MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.2d);
+        MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.0d);
         camera.setRotation(-0.5d, 0.0d, 0.2d);
         camera.setPosition(-1.0d, -7.0d, 3.0d);
 
-        MarchingLight[] lights = new MarchingLight[1];
+        MarchingLight[] lights = new MarchingLight[2];
         //lights[2] = new DirectionalLight(new double[]{0.0d, 0.65d, 0.1d}, new Color(255, 255, 255), 500);
         //lights[1] = new DirectionalLight(new double[]{0.0d, 0.7d, 0.0d}, new Color(255, 255, 255), 500);
         //lights[0] = new DirectionalLight(new double[]{0.0d, 0.75d, -0.1d}, new Color(255, 255, 255), 500);
-        lights[0] = new DiskLight(new double[]{0.0d, 0.0d, 3.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 4700000, 2.0d);
+        lights[1] = new DiskLight(new double[]{0.0d, 1.0d, 3.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 100000000, 10.0d);
+        lights[0] = new DiskLight(new double[]{0.0d, 0.0d, 4.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 400000, 2.0d);
 
-        MarchingObject[] objects = new MarchingObject[5];
+        MarchingObject[] objects = new MarchingObject[6];
+        objects[5] = new Box(new Material(new Color(246, 189, 143)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
         objects[4] = new Plane(new Material(new Color(255, 255, 255)), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
         objects[3] = new Sphere(new Material(new Color(105, 234, 156)), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
         objects[2] = new Sphere(new Material(new Color(186, 204, 109)), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);

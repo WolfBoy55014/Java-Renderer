@@ -20,7 +20,7 @@ public class MarchingRenderer extends Renderer {
 
         MAX_DISTANCE = 100.0d;
         MIN_DISTANCE = 0.001d;
-        SPP = 256;
+        SPP = 2;
     }
 
     private Ray march(Ray ray, double maxDistance) {
@@ -103,6 +103,6 @@ public class MarchingRenderer extends Renderer {
         //     color = new Color(0, 0, 255);
         // }
 
-        return new Color((int) (color[0]), (int) (color[1]), (int) (color[2]));
+        return new Color(Math.min((int) (color[0]), 255), Math.min((int) (color[1]), 255), Math.min((int) (color[2]), 255));
     }
 }
