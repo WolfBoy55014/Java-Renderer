@@ -4,8 +4,10 @@ import org.wolfboy.renderer.generic.Material;
 import org.wolfboy.renderer.marching.MarchingCamera;
 import org.wolfboy.renderer.marching.MarchingRenderer;
 import org.wolfboy.renderer.marching.MarchingScene;
+import org.wolfboy.renderer.marching.lights.DirectionalLight;
 import org.wolfboy.renderer.marching.lights.DiskLight;
 import org.wolfboy.renderer.marching.lights.MarchingLight;
+import org.wolfboy.renderer.marching.objects.Fractal;
 import org.wolfboy.renderer.marching.objects.MarchingObject;
 import org.wolfboy.renderer.marching.objects.primitive.Plane;
 import org.wolfboy.renderer.marching.objects.primitive.Sphere;
@@ -31,7 +33,7 @@ public class Main {
         final boolean save = false;
 
         UI ui = new UI(width, height);
-        MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.2d);
+        MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.0d);
         camera.setRotation(-0.5d, 0.0d, 0.2d);
         camera.setPosition(-1.0d, -7.0d, 3.0d);
 

@@ -1,33 +1,17 @@
 package org.wolfboy.renderer.marching;
 
-import jdk.incubator.vector.DoubleVector;
-import jdk.incubator.vector.Vector;
-import jdk.incubator.vector.VectorMask;
-import jdk.incubator.vector.VectorSpecies;
-
-import java.util.Arrays;
-
 import static org.wolfboy.LinearAlgebra.*;
 
 public class Ray {
 
-    static final VectorSpecies<Double> SPECIES = DoubleVector.SPECIES_256;
-    private DoubleVector direction;
-    private DoubleVector position;
+    private double[] direction;
+    private double[] position;
     private double distance = 0.0f;
     private int steps = 0;
 
     public Ray(double[] direction, double[] position) {
-//        System.out.println("Direction: " + Arrays.toString(direction));
-//        System.out.println("Direction Length: " + direction.length);
-//        System.out.println("Loop Bound: " + SPECIES.loopBound(direction.length));
-//        System.out.println("Species Length: " + SPECIES.length());
-
-        VectorMask<Double> mask = SPECIES.indexInRange(0, direction.length);
-        this.direction = DoubleVector.fromArray(SPECIES, normalize(direction), 0, mask);
-        this.position = DoubleVector.fromArray(SPECIES, position, 0, mask);
-
-//        System.out.println("Out: " + Arrays.toString(this.direction.toArray()));
+        this.direction = normalize(direction);
+        this.position = position;
     }
 
     public Ray() {
@@ -43,29 +27,29 @@ public class Ray {
     }
 
     public double[] getPosition() {
-        return position.toDoubleArray();
+        return position;
     }
 
     public double[] getDirection() {
-        return direction.toDoubleArray();
+        return direction;
     }
 
     public void setPosition(double[] position) {
-        this.position = DoubleVector.fromArray(SPECIES, position, 0);;
+        this.position = position;
     }
 
     public void setDirection(double[] direction) {
-        this.direction = DoubleVector.fromArray(SPECIES, direction, 0);;
+        this.direction = direction;
     }
 
     public int getSteps() {
         return steps;
     }
 
-    public void step(double distance) {;
-        Vector<Double> deltaPose = this.direction.mul(distance);
+    public void step(double distance) {
+        double[] deltaPose = mul(this.direction, distance);
 
-        this.position = this.position.add(deltaPose);
+        this.position = add(this.position, deltaPose);
         this.distance += distance;
 //        this.steps++;
     }
