@@ -28,9 +28,16 @@ public class DiskLight extends MarchingLight {
         // Pick random point in disk
         double x = Math.random();
         double y = Math.random();
+
+        while (Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) > this.radius) {
+            x = Math.random();
+            y = Math.random();
+        }
+
         x = (x - 0.5d) * 2.0d;
         y = (y - 0.5d) * 2.0d;
-        double[] l = LinearAlgebra.mul(LinearAlgebra.normalize(new double[]{x, y, 0.0d}), this.radius);
+        double[] l = LinearAlgebra.mul(new double[]{x, y, 0.0d}, this.radius);
+        // System.out.println(LinearAlgebra.magnitude(l));
         l = LinearAlgebra.toGlobal(l, this.position, this.rotation, new double[]{1.0d, 1.0d, 1.0d});
         double[] dir = LinearAlgebra.sub(p, l);
         dir = LinearAlgebra.normalize(LinearAlgebra.mul(dir, -1.0d));

@@ -31,7 +31,7 @@ public class Main {
         final boolean save = false;
 
         UI ui = new UI(width, height);
-        MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.0d);
+        MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.2d);
         camera.setRotation(-0.5d, 0.0d, 0.2d);
         camera.setPosition(-1.0d, -7.0d, 3.0d);
 
@@ -39,7 +39,7 @@ public class Main {
         //lights[2] = new DirectionalLight(new double[]{0.0d, 0.65d, 0.1d}, new Color(255, 255, 255), 500);
         //lights[1] = new DirectionalLight(new double[]{0.0d, 0.7d, 0.0d}, new Color(255, 255, 255), 500);
         //lights[0] = new DirectionalLight(new double[]{0.0d, 0.75d, -0.1d}, new Color(255, 255, 255), 500);
-        lights[0] = new DiskLight(new double[]{0.0d, 0.0d, 3.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 3000000, 2.0d);
+        lights[0] = new DiskLight(new double[]{0.0d, 0.0d, 3.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 4700000, 2.0d);
 
         MarchingObject[] objects = new MarchingObject[5];
         objects[4] = new Plane(new Material(new Color(255, 255, 255)), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
