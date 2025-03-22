@@ -3,22 +3,25 @@ package org.wolfboy.renderer.marching.lights;
 import org.wolfboy.LinearAlgebra;
 
 import java.awt.*;
-import java.util.Arrays;
 
 public class DiskLight extends MarchingLight {
 
-    private double radius;
+    private final double radius;
+    private final double surfaceArea;
 
     public DiskLight(double[] position, double[] rotation, Color color, double intensity, double radius) {
         super(position, rotation, color, intensity);
         this.radius = radius;
+        this.surfaceArea = 2.0d * Math.PI * Math.pow(radius, 2);
     }
 
     public DiskLight(double[] position, double[] rotation, double[] color, double intensity, double radius) {
         super(position, rotation, color, intensity);
         this.radius = radius;
+        this.surfaceArea = 2.0d * Math.PI * Math.pow(radius, 2);
     }
 
+    @Override
     public double[] getLightDir(double[] p) {
         p = this.transformPoint(p);
 
@@ -33,5 +36,21 @@ public class DiskLight extends MarchingLight {
         dir = LinearAlgebra.normalize(LinearAlgebra.mul(dir, -1.0d));
 
         return dir;
+    }
+
+    @Override
+    public double getIntensity(double[] p) {
+        // We are going to pretend a disk light is just a collection of point lights shaped like a disk
+        // This means we can use the point light falloff equation
+
+        double d = LinearAlgebra.distance(p, this.position);
+
+        // System.out.println(d);
+
+        double falloff = (4 * Math.PI * Math.pow(d, 2)) * this.surfaceArea;
+
+        // System.out.println(this.intensity / falloff);
+
+        return this.intensity / falloff;
     }
 }

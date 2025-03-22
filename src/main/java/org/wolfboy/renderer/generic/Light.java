@@ -41,7 +41,7 @@ public class Light {
         return color;
     }
 
-    public double getIntensity() {
+    public double getIntensity(double[] p) {
         return intensity;
     }
 

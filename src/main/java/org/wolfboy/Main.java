@@ -4,10 +4,8 @@ import org.wolfboy.renderer.generic.Material;
 import org.wolfboy.renderer.marching.MarchingCamera;
 import org.wolfboy.renderer.marching.MarchingRenderer;
 import org.wolfboy.renderer.marching.MarchingScene;
-import org.wolfboy.renderer.marching.lights.DirectionalLight;
 import org.wolfboy.renderer.marching.lights.DiskLight;
 import org.wolfboy.renderer.marching.lights.MarchingLight;
-import org.wolfboy.renderer.marching.objects.Fractal;
 import org.wolfboy.renderer.marching.objects.MarchingObject;
 import org.wolfboy.renderer.marching.objects.primitive.Plane;
 import org.wolfboy.renderer.marching.objects.primitive.Sphere;
@@ -28,8 +26,8 @@ public class Main {
         // 480p (854 * 480)
         // 360p (640 * 360)
 
-        final int width = 320;
-        final int height = 180;
+        final int width = 1920;
+        final int height = 1080;
         final boolean save = false;
 
         UI ui = new UI(width, height);
@@ -41,7 +39,7 @@ public class Main {
         //lights[2] = new DirectionalLight(new double[]{0.0d, 0.65d, 0.1d}, new Color(255, 255, 255), 500);
         //lights[1] = new DirectionalLight(new double[]{0.0d, 0.7d, 0.0d}, new Color(255, 255, 255), 500);
         //lights[0] = new DirectionalLight(new double[]{0.0d, 0.75d, -0.1d}, new Color(255, 255, 255), 500);
-        lights[0] = new DiskLight(new double[]{0.0d, 0.0d, 5.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 1000, 2.0d);
+        lights[0] = new DiskLight(new double[]{0.0d, 0.0d, 3.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 3000000, 2.0d);
 
         MarchingObject[] objects = new MarchingObject[5];
         objects[4] = new Plane(new Material(new Color(255, 255, 255)), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');

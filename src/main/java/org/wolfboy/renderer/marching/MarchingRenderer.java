@@ -20,7 +20,7 @@ public class MarchingRenderer extends Renderer {
 
         MAX_DISTANCE = 100.0d;
         MIN_DISTANCE = 0.001d;
-        SPP = 100;
+        SPP = 16;
     }
 
     private Ray march(Ray ray, double maxDistance) {
@@ -71,9 +71,11 @@ public class MarchingRenderer extends Renderer {
 
                 shadowRay = this.march(shadowRay, light_dist);
                 if (shadowRay.getDistance() >= light_dist) {
-                    illumination[0] += Math.max(LinearAlgebra.dot(n, light_dir), 0.0d) * light.getIntensity() * light.getColor()[0];
-                    illumination[1] += Math.max(LinearAlgebra.dot(n, light_dir), 0.0d) * light.getIntensity() * light.getColor()[1];
-                    illumination[2] += Math.max(LinearAlgebra.dot(n, light_dir), 0.0d) * light.getIntensity() * light.getColor()[2];
+//                    illumination[0] += Math.max(LinearAlgebra.dot(n, light_dir), 0.0d) * light.getIntensity(p) * light.getColor()[0];
+//                    illumination[1] += Math.max(LinearAlgebra.dot(n, light_dir), 0.0d) * light.getIntensity(p) * light.getColor()[1];
+//                    illumination[2] += Math.max(LinearAlgebra.dot(n, light_dir), 0.0d) * light.getIntensity(p) * light.getColor()[2];
+
+                    illumination = LinearAlgebra.add(illumination, LinearAlgebra.mul(light.getColor(), Math.max(LinearAlgebra.dot(n, light_dir), 0.0d) * light.getIntensity(p)));
                 }
             }
 
