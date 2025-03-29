@@ -9,6 +9,7 @@ import org.wolfboy.renderer.marching.MarchingScene;
 import org.wolfboy.renderer.marching.lights.DirectionalLight;
 import org.wolfboy.renderer.marching.lights.DiskLight;
 import org.wolfboy.renderer.marching.lights.MarchingLight;
+import org.wolfboy.renderer.marching.lights.SquareLight;
 import org.wolfboy.renderer.marching.objects.MarchingObject;
 import org.wolfboy.renderer.marching.objects.primitive.Box;
 import org.wolfboy.renderer.marching.objects.primitive.Plane;
@@ -58,10 +59,10 @@ public class Main {
         File uv = new File("uv.png");
 
         MarchingLight[] lights = new MarchingLight[3];
-        lights[2] = new DirectionalLight(new double[]{-0.7d, 0.3d, 0.1d}, new Color(255, 255, 255), 2);
+        // lights[2] = new DirectionalLight(new double[]{-0.7d, 0.3d, 0.1d}, new Color(255, 255, 255), 2);
         //lights[1] = new DirectionalLight(new double[]{0.0d, 0.7d, 0.0d}, new Color(255, 255, 255), 500);
         //lights[0] = new DirectionalLight(new double[]{0.0d, 0.75d, -0.1d}, new Color(255, 255, 255), 500);
-        // lights[1] = new DiskLight(new double[]{0.0d, 1.0d, 3.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 200000000, 10.0d);
+        lights[1] = new SquareLight(new double[]{0.0d, -1.0d, 10.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 2000000, 20.0d);
         lights[0] = new DiskLight(new double[]{0.0d, 0.0d, 5.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 120000, 5.0d);
 
         MarchingObject[] objects = new MarchingObject[7];
