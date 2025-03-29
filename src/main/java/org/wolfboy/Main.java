@@ -32,7 +32,7 @@ public class Main {
 
         final int width = 1920;
         final int height = 1080;
-        final boolean save = false;
+        final boolean save = true;
         final int SPP = 64;
 
         UI ui = new UI(width, height);
@@ -58,8 +58,8 @@ public class Main {
         lights[0] = new DiskLight(new double[]{0.0d, 0.0d, 5.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 50000000, 5.0d);
 
         MarchingObject[] objects = new MarchingObject[6];
-        objects[5] = new Box(new SolidMaterial(new Color(246, 144, 101)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
-        objects[4] = new Plane(new TextureMaterial(stoneBricks), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
+        objects[5] = new Box(new SolidMaterial(new Color(0, 0, 0)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
+        objects[4] = new Plane(new TextureMaterial(blackConcrete), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
         objects[3] = new Sphere(new SolidMaterial(new Color(142, 202, 125)), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
         objects[2] = new Sphere(new SolidMaterial(new Color(202, 190, 72)), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
         objects[1] = new Sphere(new SolidMaterial(new Color(80, 109, 154)), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
