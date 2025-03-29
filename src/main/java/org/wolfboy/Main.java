@@ -17,6 +17,9 @@ import org.wolfboy.ui.UI;
 
 import java.awt.*;
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -32,8 +35,8 @@ public class Main {
 
         final int width = 1920;
         final int height = 1080;
-        final boolean save = false;
-        final int SPP = 64;
+        final boolean save = true;
+        final int SPP = 32;
 
         UI ui = new UI(width, height);
         MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.0d);
@@ -41,21 +44,33 @@ public class Main {
         camera.setPosition(-1.0d, -7.0d, 3.0d);
 
         File check = new File("check.png");
+        File barrel = new File("barrel_bottom.png");
+        File debug = new File("debug.png");
+        File cobble = new File("cobblestone.png");
+        File gilded = new File("gilded_blackstone.png");
+        File emerald = new File("emerald_block.png");
+        File log = new File("spruce_log_top.png");
+        File leaves = new File("cherry_leaves.png");
+        File sand = new File("sand.png");
+        File terracotta = new File("terracotta.png");
+        File sandstoneCarved = new File("sandstone_carved.png");
+        File cyan = new File("cyan_glazed_terracotta.png");
+        File uv = new File("uv.png");
 
         MarchingLight[] lights = new MarchingLight[3];
-        lights[2] = new DirectionalLight(new double[]{-0.1d, 0.65d, 0.1d}, new Color(255, 255, 255), 200);
+        lights[2] = new DirectionalLight(new double[]{-0.7d, 0.3d, 0.1d}, new Color(255, 255, 255), 2);
         //lights[1] = new DirectionalLight(new double[]{0.0d, 0.7d, 0.0d}, new Color(255, 255, 255), 500);
         //lights[0] = new DirectionalLight(new double[]{0.0d, 0.75d, -0.1d}, new Color(255, 255, 255), 500);
         // lights[1] = new DiskLight(new double[]{0.0d, 1.0d, 3.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 200000000, 10.0d);
-        lights[0] = new DiskLight(new double[]{0.0d, 0.0d, 5.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 50000000, 5.0d);
+        lights[0] = new DiskLight(new double[]{0.0d, 0.0d, 5.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 120000, 5.0d);
 
-        MarchingObject[] objects = new MarchingObject[6];
-        objects[5] = new Box(new SolidMaterial(new Color(246, 189, 143)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
-        objects[4] = new Plane(new TextureMaterial(check), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
-        objects[3] = new Sphere(new SolidMaterial(new Color(105, 234, 156)), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[2] = new Sphere(new SolidMaterial(new Color(186, 204, 109)), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[1] = new Sphere(new SolidMaterial(new Color(200, 128, 228)), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
-        objects[0] = new Sphere(new SolidMaterial(new Color(121, 216, 225)), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
+        MarchingObject[] objects = new MarchingObject[7];
+        objects[6] = new Box(new TextureMaterial(cobble), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
+        objects[4] = new Plane(new TextureMaterial(sand), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
+        objects[3] = new Sphere(new TextureMaterial(leaves), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
+        objects[2] = new Sphere(new TextureMaterial(gilded), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
+        objects[1] = new Sphere(new TextureMaterial(log), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[0] = new Sphere(new TextureMaterial(terracotta), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
         // objects[0] = new Fractal(new Material(new Color(121, 225, 194)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{0.0d, 0.0d, 0.0d}, new double[]{1.0d, 1.0d, 1.0d});
 
         MarchingScene scene = new MarchingScene(objects, lights);
@@ -68,6 +83,16 @@ public class Main {
         while (i == 0) {
             i++;
 
+            Integer[] order = new Integer[width];
+
+            for (int o = 0; o < width; o++) {
+                order[o] = o;
+            }
+
+            List<Integer> orderList = Arrays.asList(order);
+            Collections.shuffle(orderList);
+            order = orderList.toArray(new Integer[width]);
+
             for (int x = 0; x < width; x++) {
                 tasks[x] = new RenderTask(x, renderer, ui);
             }
@@ -76,7 +101,7 @@ public class Main {
             long startTime = System.nanoTime();
 
             for (int x = 0; x < width; x++) {
-                pool.execute(tasks[x]);
+                pool.execute(tasks[order[x]]);
             }
 
             pool.shutdown();

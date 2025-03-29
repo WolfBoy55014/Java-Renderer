@@ -82,10 +82,13 @@ public class MarchingRenderer extends Renderer {
             color[0] += albedo[0] * illumination[0];
             color[1] += albedo[1] * illumination[1];
             color[2] += albedo[2] * illumination[2];
+            // color = LinearAlgebra.add(color, new double[]{uv[0], uv[1], 0.0d});
+            // color = LinearAlgebra.add(LinearAlgebra.mul(LinearAlgebra.add(n, 1.0d), 128), color);
         }
         color[0] /= SPP;
         color[1] /= SPP;
         color[2] /= SPP;
+        color = LinearAlgebra.mul(color, 255.0d);
 
         // color = new Color((int) Math.max(this.camera.getDirectionAtPixel(x, y)[0] * 255, 0),
         //         0 /*(int) Math.max(this.camera.getDirectionAtPixel(x, y)[1] * 255, 0)*/,
@@ -103,6 +106,7 @@ public class MarchingRenderer extends Renderer {
         //     color = new Color(0, 0, 255);
         // }
 
-        return new Color(Math.min((int) (color[0]), 255), Math.min((int) (color[1]), 255), Math.min((int) (color[2]), 255));
+        return new Color(((int) (color[0])), ((int) (color[1])), ((int) (color[2])));
+        // return new Color(Math.min((int) (color[0]), 255), Math.min((int) (color[1]), 255), Math.min((int) (color[2]), 255));
     }
 }

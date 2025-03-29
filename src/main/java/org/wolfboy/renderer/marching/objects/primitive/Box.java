@@ -5,6 +5,7 @@ import org.wolfboy.renderer.generic.Material;
 import org.wolfboy.renderer.marching.objects.MarchingObject;
 
 import javax.sound.sampled.Line;
+import java.util.Arrays;
 
 public class Box extends MarchingObject {
 
@@ -58,5 +59,29 @@ public class Box extends MarchingObject {
             return new double[]{0.0d, 0.0d, -1.0d};
         }
         return new double[]{0.0d, 0.0d, 1.0d};
+    }
+
+    @Override
+    public double[] getUV(double[] p) {
+        p = this.transformPoint(p);
+
+        double[] f = LinearAlgebra.abs(p);
+        double x = 0.0d;
+        double y = 0.0d;
+
+        if (f[2] >= f[1] && f[2] >= f[0]) {
+            x = ((p[0] + sides[0]) / 2.0d) % (1 / (sides[0] * 2.0d)) * (sides[0] * 2.0d);
+            y = (p[1] + sides[1]) / 2.0d % (1 / (sides[1] * 2.0d)) * (sides[1] * 2.0d);
+        } else if (f[0] >= f[1] && f[0] >= f[2]) {
+            x = (p[1] + sides[1]) / 2.0d % (1 / (sides[1] * 2.0d)) * (sides[1] * 2.0d);
+            y = (p[2] + sides[2]) / 2.0d % (1 / (sides[2] * 2.0d)) * (sides[2] * 2.0d);
+        } else {
+            x = (p[0] + sides[0]) / 2.0d % (1 / (sides[0] * 2.0d)) * (sides[0] * 2.0d);
+            y = (p[2] + sides[2]) / 2.0d % (1 / (sides[2] * 2.0d)) * (sides[2] * 2.0d);
+        }
+
+
+
+        return new double[]{x, y};
     }
 }

@@ -19,15 +19,15 @@ public class Plane extends MarchingObject {
         p = this.transformPoint(p);
 
         if (this.axis == 'x') {
-            return p[0] - this.position[0];
+            return Math.abs(p[0] - this.position[0]);
         }
 
         if (this.axis == 'y') {
-            return p[1] - this.position[1];
+            return Math.abs(p[1] - this.position[1]);
         }
 
         if (this.axis == 'z') {
-            return p[2] - this.position[2];
+            return Math.abs(p[2] - this.position[2]);
         }
 
         return Double.MAX_VALUE;
@@ -38,15 +38,27 @@ public class Plane extends MarchingObject {
         p = this.transformPoint(p);
 
         if (this.axis == 'x') {
-            return new double[] {1.0d, 0.0d, 0.0d};
+            if (p[0] < 0) {
+                return new double[]{1.0d, 0.0d, 0.0d};
+            } else {
+                return new double[]{-1.0d, 0.0d, 0.0d};
+            }
         }
 
         if (this.axis == 'y') {
-            return new double[] {0.0d, 1.0d, 0.0d};
+            if (p[1] < 0) {
+                return new double[]{0.0d, 1.0d, 0.0d};
+            } else {
+                return new double[]{0.0d, -1.0d, 0.0d};
+            }
         }
 
         if (this.axis == 'z') {
-            return new double[] {0.0d, 0.0d, 1.0d};
+            if (p[2] < 0) {
+                return new double[]{0.0d, 0.0d, 1.0d};
+            } else {
+                return new double[]{0.0d, 0.0d, -1.0d};
+            }
         }
 
         return new double[] {1.0d, 0.0d, 0.0d};
@@ -54,6 +66,15 @@ public class Plane extends MarchingObject {
 
     @Override
     public double[] getUV(double[] p) {
-        return LinearAlgebra.mod(p, 1.0d);
+        if (this.axis == 'z') {
+            return LinearAlgebra.mod(new double[]{p[0], p[1], 0.0d}, 1.0d);
+        }
+        if (this.axis == 'x') {
+            return LinearAlgebra.mod(new double[]{p[1], p[2], 0.0d}, 1.0d);
+        }
+        if (this.axis == 'y') {
+            return LinearAlgebra.mod(new double[]{p[0], p[2], 0.0d}, 1.0d);
+        }
+        return new double[3];
     }
 }
