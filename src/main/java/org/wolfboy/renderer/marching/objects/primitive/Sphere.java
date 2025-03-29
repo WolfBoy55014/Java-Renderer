@@ -11,11 +11,12 @@ public class Sphere extends MarchingObject {
 
     private double radius;
 
-    public Sphere(Material material, double[] position, double[] rotation, double[] scale) {
+    public Sphere(Material material, double[] position, double[] rotation, double[] scale, double radius) {
         super(material, position, rotation, scale);
+        this.radius = radius;
     }
 
-    public Sphere(Material material, double[] position, float radius) {
+    public Sphere(Material material, double[] position, double radius) {
         super(material, position, new double[]{0.0d, 0.0d, 0.0d}, new double[]{1.0d, 1.0d, 1.0d});
         this.radius = radius;
     }

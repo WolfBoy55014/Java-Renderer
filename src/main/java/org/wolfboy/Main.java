@@ -14,6 +14,7 @@ import org.wolfboy.renderer.marching.objects.MarchingObject;
 import org.wolfboy.renderer.marching.objects.primitive.Box;
 import org.wolfboy.renderer.marching.objects.primitive.Plane;
 import org.wolfboy.renderer.marching.objects.primitive.Sphere;
+import org.wolfboy.renderer.marching.objects.primitive.Torus;
 import org.wolfboy.ui.UI;
 
 import java.awt.*;
@@ -37,10 +38,10 @@ public class Main {
         final int width = 1920;
         final int height = 1080;
         final boolean save = true;
-        final int SPP = 32;
+        final int SPP = 128;
 
         UI ui = new UI(width, height);
-        MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.0d);
+        MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.12d);
         camera.setRotation(-0.5d, 0.0d, 0.2d);
         camera.setPosition(-1.0d, -7.0d, 3.0d);
 
@@ -60,13 +61,14 @@ public class Main {
 
         MarchingLight[] lights = new MarchingLight[3];
         // lights[2] = new DirectionalLight(new double[]{-0.7d, 0.3d, 0.1d}, new Color(255, 255, 255), 2);
-        //lights[1] = new DirectionalLight(new double[]{0.0d, 0.7d, 0.0d}, new Color(255, 255, 255), 500);
-        //lights[0] = new DirectionalLight(new double[]{0.0d, 0.75d, -0.1d}, new Color(255, 255, 255), 500);
-        lights[1] = new SquareLight(new double[]{0.0d, -1.0d, 10.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 2000000, 20.0d);
+        // lights[1] = new DirectionalLight(new double[]{0.0d, 0.7d, 0.0d}, new Color(255, 255, 255), 500);
+        // lights[0] = new DirectionalLight(new double[]{0.0d, 0.75d, -0.1d}, new Color(255, 255, 255), 500);
+        lights[1] = new SquareLight(new double[]{-1.0d, -1.0d, 10.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 2700000, 20.0d);
         lights[0] = new DiskLight(new double[]{0.0d, 0.0d, 5.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 120000, 5.0d);
 
         MarchingObject[] objects = new MarchingObject[7];
-        objects[6] = new Box(new TextureMaterial(cobble), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
+        // objects[6] = new Box(new TextureMaterial(cobble), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
+        objects[5] = new Torus(new TextureMaterial(cyan), new double[]{0.0d, 0.0d, 0.0d}, 0.5d, 1.0d);
         objects[4] = new Plane(new TextureMaterial(sand), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
         objects[3] = new Sphere(new TextureMaterial(leaves), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
         objects[2] = new Sphere(new TextureMaterial(gilded), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
