@@ -41,6 +41,14 @@ public class Main {
         camera.setPosition(-1.0d, -7.0d, 3.0d);
 
         File check = new File("check.png");
+        File barrel = new File("barrel_side.png");
+        File blackConcrete = new File("black_concrete.png");
+        File blackGlass = new File("black_stained_glass.png");
+        File obsidianCrying = new File("crying_obsidian.png");
+        File lodestone = new File("lodestone_top.png");
+        File netherite = new File("netherite_block.png");
+        File respawn = new File("respawn_anchor_top_off.png");
+        File stoneBricks = new File("stone_bricks.png");
 
         MarchingLight[] lights = new MarchingLight[3];
         lights[2] = new DirectionalLight(new double[]{-0.1d, 0.65d, 0.1d}, new Color(255, 255, 255), 200);
@@ -50,12 +58,12 @@ public class Main {
         lights[0] = new DiskLight(new double[]{0.0d, 0.0d, 5.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 50000000, 5.0d);
 
         MarchingObject[] objects = new MarchingObject[6];
-        objects[5] = new Box(new SolidMaterial(new Color(246, 189, 143)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
-        objects[4] = new Plane(new TextureMaterial(check), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
-        objects[3] = new Sphere(new SolidMaterial(new Color(105, 234, 156)), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[2] = new Sphere(new SolidMaterial(new Color(186, 204, 109)), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[1] = new Sphere(new SolidMaterial(new Color(200, 128, 228)), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
-        objects[0] = new Sphere(new SolidMaterial(new Color(121, 216, 225)), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[5] = new Box(new SolidMaterial(new Color(246, 144, 101)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
+        objects[4] = new Plane(new TextureMaterial(stoneBricks), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
+        objects[3] = new Sphere(new SolidMaterial(new Color(142, 202, 125)), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
+        objects[2] = new Sphere(new SolidMaterial(new Color(202, 190, 72)), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
+        objects[1] = new Sphere(new SolidMaterial(new Color(80, 109, 154)), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[0] = new Sphere(new SolidMaterial(new Color(202, 82, 192)), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
         // objects[0] = new Fractal(new Material(new Color(121, 225, 194)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{0.0d, 0.0d, 0.0d}, new double[]{1.0d, 1.0d, 1.0d});
 
         MarchingScene scene = new MarchingScene(objects, lights);
