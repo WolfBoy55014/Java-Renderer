@@ -37,11 +37,11 @@ public class Main {
 
         final int width = 1920;
         final int height = 1080;
-        final boolean save = true;
-        final int SPP = 128;
+        final boolean save = false;
+        final int SPP = 32;
 
         UI ui = new UI(width, height);
-        MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.12d);
+        MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.0d);
         camera.setRotation(-0.5d, 0.0d, 0.2d);
         camera.setPosition(-1.0d, -7.0d, 3.0d);
 
@@ -54,8 +54,8 @@ public class Main {
         File log = new File("spruce_log_top.png");
         File leaves = new File("cherry_leaves.png");
         File sand = new File("sand.png");
+        File sandNormal = new File("sand_n.png");
         File terracotta = new File("terracotta.png");
-        File sandstoneCarved = new File("sandstone_carved.png");
         File cyan = new File("cyan_glazed_terracotta.png");
         File uv = new File("uv.png");
 
@@ -69,7 +69,7 @@ public class Main {
         MarchingObject[] objects = new MarchingObject[7];
         // objects[6] = new Box(new TextureMaterial(cobble), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
         objects[5] = new Torus(new TextureMaterial(cyan), new double[]{0.0d, 0.0d, 0.0d}, 0.5d, 1.0d);
-        objects[4] = new Plane(new TextureMaterial(sand), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
+        objects[4] = new Plane(new TextureMaterial(sand, sandNormal), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
         objects[3] = new Sphere(new TextureMaterial(leaves), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
         objects[2] = new Sphere(new TextureMaterial(gilded), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
         objects[1] = new Sphere(new TextureMaterial(log), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);

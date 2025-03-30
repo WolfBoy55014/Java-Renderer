@@ -41,6 +41,14 @@ public class MarchingObject extends Object {
         return LinearAlgebra.normalize(n);
     }
 
+    public double[] getBinormal(double[] n) {
+        return new double[]{n[0], -n[2], n[1]};
+    }
+
+    public double[] getTangent(double[] n) {
+        return new double[]{n[2], n[1], -n[0]};
+    }
+
     public double[] transformPoint(double[] p) {
         return LinearAlgebra.toLocal(p, this.position, this.rotation, this.scale);
     }

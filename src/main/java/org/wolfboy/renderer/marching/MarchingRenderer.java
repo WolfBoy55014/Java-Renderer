@@ -83,7 +83,7 @@ public class MarchingRenderer extends Renderer {
             color[1] += albedo[1] * illumination[1];
             color[2] += albedo[2] * illumination[2];
             // color = LinearAlgebra.add(color, new double[]{uv[0], uv[1], 0.0d});
-            // color = LinearAlgebra.add(LinearAlgebra.mul(LinearAlgebra.add(n, 1.0d), 128), color);
+            // color = LinearAlgebra.add(LinearAlgebra.div(LinearAlgebra.add(n, 1.0d), 2.0d), color);
         }
         color[0] /= SPP;
         color[1] /= SPP;

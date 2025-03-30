@@ -4,6 +4,9 @@ import org.wolfboy.LinearAlgebra;
 import org.wolfboy.renderer.generic.Material;
 import org.wolfboy.renderer.marching.objects.MarchingObject;
 
+import javax.sound.sampled.Line;
+import java.util.Arrays;
+
 public class Plane extends MarchingObject {
 
     private char axis;
@@ -37,31 +40,35 @@ public class Plane extends MarchingObject {
     public double[] getNormal(double[] p) {
         p = this.transformPoint(p);
 
+        double[] n = new double[] {1.0d, 0.0d, 0.0d};
+
         if (this.axis == 'x') {
             if (p[0] < 0) {
-                return new double[]{1.0d, 0.0d, 0.0d};
+                n = new double[]{1.0d, 0.0d, 0.0d};
             } else {
-                return new double[]{-1.0d, 0.0d, 0.0d};
+                n = new double[]{-1.0d, 0.0d, 0.0d};
             }
-        }
-
-        if (this.axis == 'y') {
+        } else if (this.axis == 'y') {
             if (p[1] < 0) {
-                return new double[]{0.0d, 1.0d, 0.0d};
+                n = new double[]{0.0d, 1.0d, 0.0d};
             } else {
-                return new double[]{0.0d, -1.0d, 0.0d};
+                n = new double[]{0.0d, -1.0d, 0.0d};
             }
-        }
-
-        if (this.axis == 'z') {
+        } else if (this.axis == 'z') {
             if (p[2] < 0) {
-                return new double[]{0.0d, 0.0d, 1.0d};
+                n = new double[]{0.0d, 0.0d, 1.0d};
+                double[] bn = new double[]{0.0d, 1.0d, 0.0d};
+                double[] t = new double[]{1.0d, 0.0d, 0.0d};
+                double[] nt = this.material.getNormal(p, this.getUV(p));
+                // (T * N_ts.x) + (B * N_ts.y) + (N * N_ts.z)
+                n = LinearAlgebra.add(LinearAlgebra.add(LinearAlgebra.mul(t, nt[0]), LinearAlgebra.mul(bn, nt[1])), LinearAlgebra.mul(n, nt[2]));
+                n = LinearAlgebra.normalize(n);
             } else {
-                return new double[]{0.0d, 0.0d, -1.0d};
+                n = new double[]{0.0d, 0.0d, -1.0d};
             }
         }
 
-        return new double[] {1.0d, 0.0d, 0.0d};
+        return n;
     }
 
     @Override

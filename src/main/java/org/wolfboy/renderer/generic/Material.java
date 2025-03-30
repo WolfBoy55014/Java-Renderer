@@ -4,6 +4,8 @@ public interface Material {
 
     double[] getAlbedo(double[] p, double[] uv);
 
+    double[] getNormal(double[] p, double[] uv);
+
     float getRoughness(double[] p, double[] uv);
 
     float getSpecular(double[] p, double[] uv);
