@@ -32,7 +32,7 @@ public class Main {
 
         final int width = 1920;
         final int height = 1080;
-        final boolean save = true;
+        final boolean save = false;
         final int SPP = 64;
 
         UI ui = new UI(width, height);
@@ -49,6 +49,16 @@ public class Main {
         File netherite = new File("netherite_block.png");
         File respawn = new File("respawn_anchor_top_off.png");
         File stoneBricks = new File("stone_bricks.png");
+        File stoneBricksMossy = new File("stonebrick_mossy.png");
+        File anvil = new File("anvil_base.png");
+        File blackShulker = new File("black_shulker_box.png");
+        File grayShulker = new File("gray_shulker_box.png");
+        File greenShulker = new File("green_shulker_box.png");
+        File lightGrayShulker = new File("light_gray_shulker_box.png");
+        File limeShulker = new File("lime_shulker_box.png");
+        File clayGreen = new File("hardened_clay_stained_green.png");
+        File clayLime = new File("hardened_clay_stained_lime.png");
+        File smithingTable = new File("smithing_table_top.png");
 
         MarchingLight[] lights = new MarchingLight[3];
         lights[2] = new DirectionalLight(new double[]{-0.1d, 0.65d, 0.1d}, new Color(255, 255, 255), 200);
@@ -58,8 +68,8 @@ public class Main {
         lights[0] = new DiskLight(new double[]{0.0d, 0.0d, 5.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 50000000, 5.0d);
 
         MarchingObject[] objects = new MarchingObject[6];
-        objects[5] = new Box(new SolidMaterial(new Color(0, 0, 0)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
-        objects[4] = new Plane(new TextureMaterial(blackConcrete), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
+        objects[5] = new Box(new SolidMaterial(new Color(225, 157, 128)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
+        objects[4] = new Plane(new TextureMaterial(clayLime), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
         objects[3] = new Sphere(new SolidMaterial(new Color(142, 202, 125)), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
         objects[2] = new Sphere(new SolidMaterial(new Color(202, 190, 72)), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
         objects[1] = new Sphere(new SolidMaterial(new Color(80, 109, 154)), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
