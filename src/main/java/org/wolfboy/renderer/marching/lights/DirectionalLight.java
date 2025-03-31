@@ -15,6 +15,6 @@ public class DirectionalLight extends MarchingLight {
     }
 
     public double[] getLightDir(double[] p) {
-        return LinearAlgebra.toGlobal(new double[]{0.0d, 0.0d, 1.0d}, this.position, this.rotation, new double[]{1.0d, 1.0d, 1.0d});
+        return LinearAlgebra.toLocal(new double[]{0.0d, 0.0d, 1.0d}, this.position, this.rotation, new double[]{1.0d, 1.0d, 1.0d});
     }
 }

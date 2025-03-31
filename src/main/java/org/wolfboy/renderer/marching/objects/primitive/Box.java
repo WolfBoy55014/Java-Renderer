@@ -40,31 +40,55 @@ public class Box extends MarchingObject {
     public double[] getNormal(double[] p) {
         p = this.transformPoint(p);
 
+        double[] n = new double[] {1.0d, 0.0d, 0.0d};
+        double[] bn = new double[] {0.0d, 1.0d, 0.0d};
+        double[] t = new double[] {0.0d, 0.0d, 1.0d};
+        double[] nt = this.material.getNormal(p, this._getUV(p));
+
         if (p[0] >= this.sides[0]) {
-            return new double[]{1.0d, 0.0d, 0.0d};
+            n = new double[]{1.0d, 0.0d, 0.0d};
+            bn = new double[]{0.0d, 0.0d, 1.0d};
+            t = new double[]{0.0d, 1.0d, 0.0d};
+            n = LinearAlgebra.add(LinearAlgebra.add(LinearAlgebra.mul(t, nt[0]), LinearAlgebra.mul(bn, nt[1])), LinearAlgebra.mul(n, nt[2]));
+        } else if (p[1] >= this.sides[1]) {
+            n = new double[]{0.0d, 1.0d, 0.0d};
+            bn = new double[]{0.0d, 0.0d, 1.0d};
+            t = new double[]{1.0d, 0.0d, 0.0d};
+            n = LinearAlgebra.add(LinearAlgebra.add(LinearAlgebra.mul(t, nt[0]), LinearAlgebra.mul(bn, nt[1])), LinearAlgebra.mul(n, nt[2]));
+        } else if (p[2] >= this.sides[2]) {
+            n = new double[]{0.0d, 0.0d, 1.0d};
+            bn = new double[]{0.0d, 1.0d, 0.0d};
+            t = new double[]{1.0d, 0.0d, 0.0d};
+            n = LinearAlgebra.add(LinearAlgebra.add(LinearAlgebra.mul(t, nt[0]), LinearAlgebra.mul(bn, nt[1])), LinearAlgebra.mul(n, nt[2]));
+        } else if (p[0] <= -this.sides[0]) {
+            n = new double[]{-1.0d, 0.0d, 0.0d};
+            bn = new double[]{0.0d, 0.0d, 1.0d};
+            t = new double[]{0.0d, 1.0d, 0.0d};
+            n = LinearAlgebra.add(LinearAlgebra.add(LinearAlgebra.mul(t, nt[0]), LinearAlgebra.mul(bn, nt[1])), LinearAlgebra.mul(n, nt[2]));
+        } else if (p[1] <= -this.sides[1]) {
+            n = new double[]{0.0d, -1.0d, 0.0d};
+            bn = new double[]{0.0d, 0.0d, 1.0d};
+            t = new double[]{1.0d, 0.0d, 0.0d};
+            n = LinearAlgebra.add(LinearAlgebra.add(LinearAlgebra.mul(t, nt[0]), LinearAlgebra.mul(bn, nt[1])), LinearAlgebra.mul(n, nt[2]));
+        } else if (p[2] <= -this.sides[2]) {
+            n = new double[]{0.0d, 0.0d, -1.0d};
+            bn = new double[]{0.0d, 1.0d, 0.0d};
+            t = new double[]{1.0d, 0.0d, 0.0d};
+            n = LinearAlgebra.add(LinearAlgebra.add(LinearAlgebra.mul(t, nt[0]), LinearAlgebra.mul(bn, nt[1])), LinearAlgebra.mul(n, nt[2]));
         }
-        if (p[1] >= this.sides[1]) {
-            return new double[]{0.0d, 1.0d, 0.0d};
-        }
-        if (p[2] >= this.sides[2]) {
-            return new double[]{0.0d, 0.0d, 1.0d};
-        }
-        if (p[0] <= -this.sides[0]) {
-            return new double[]{-1.0d, 0.0d, 0.0d};
-        }
-        if (p[1] <= -this.sides[1]) {
-            return new double[]{0.0d, -1.0d, 0.0d};
-        }
-        if (p[2] <= -this.sides[2]) {
-            return new double[]{0.0d, 0.0d, -1.0d};
-        }
-        return new double[]{0.0d, 0.0d, 1.0d};
+
+        // (T * N_ts.x) + (B * N_ts.y) + (N * N_ts.z)
+        // TODO: This is in the wrong spot, it needs to be in every if block.
+        return LinearAlgebra.normalize(n);
     }
 
     @Override
     public double[] getUV(double[] p) {
         p = this.transformPoint(p);
+        return this._getUV(p);
+    }
 
+    private double[] _getUV(double[] p) {
         double[] f = LinearAlgebra.abs(p);
         double x = 0.0d;
         double y = 0.0d;
