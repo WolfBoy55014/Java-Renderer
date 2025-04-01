@@ -1,12 +1,9 @@
 package org.wolfboy;
 
-import org.wolfboy.renderer.generic.Material;
-import org.wolfboy.renderer.generic.SolidMaterial;
 import org.wolfboy.renderer.generic.TextureMaterial;
 import org.wolfboy.renderer.marching.MarchingCamera;
 import org.wolfboy.renderer.marching.MarchingRenderer;
 import org.wolfboy.renderer.marching.MarchingScene;
-import org.wolfboy.renderer.marching.lights.DirectionalLight;
 import org.wolfboy.renderer.marching.lights.DiskLight;
 import org.wolfboy.renderer.marching.lights.MarchingLight;
 import org.wolfboy.renderer.marching.lights.SquareLight;
@@ -14,14 +11,10 @@ import org.wolfboy.renderer.marching.objects.MarchingObject;
 import org.wolfboy.renderer.marching.objects.primitive.Box;
 import org.wolfboy.renderer.marching.objects.primitive.Plane;
 import org.wolfboy.renderer.marching.objects.primitive.Sphere;
-import org.wolfboy.renderer.marching.objects.primitive.Torus;
 import org.wolfboy.ui.UI;
 
 import java.awt.*;
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -37,8 +30,9 @@ public class Main {
 
         final int width = 1920;
         final int height = 1080;
-        final boolean save = true;
-        final int SPP = 512;
+        final boolean save = false;
+        final int SPP = 16;
+        final int tileSize = 16;
 
         UI ui = new UI(width, height);
         MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.0d);
@@ -82,54 +76,43 @@ public class Main {
 
         MarchingRenderer renderer = new MarchingRenderer(scene, camera, SPP);
 
-        Runnable[] tasks = new Runnable[width];
+        int numTilesX = (int) Math.ceil((double) width / tileSize);
+        int numTilesY = (int) Math.ceil((double) height / tileSize);
+        int numTiles = numTilesX * numTilesY;
 
-        int i = 0;
-        while (i == 0) {
-            i++;
+        Runnable[] tasks = new Runnable[numTiles];
 
-            Integer[] order = new Integer[width];
-
-            for (int o = 0; o < width; o++) {
-                order[o] = o;
-            }
-
-            List<Integer> orderList = Arrays.asList(order);
-            Collections.shuffle(orderList);
-            order = orderList.toArray(new Integer[width]);
-
-            for (int x = 0; x < width; x++) {
-                tasks[x] = new RenderTask(x, renderer, ui);
-            }
-
-            ExecutorService pool = Executors.newFixedThreadPool(8);
-            long startTime = System.nanoTime();
-
-            for (int x = 0; x < width; x++) {
-                pool.execute(tasks[order[x]]);
-            }
-
-            pool.shutdown();
-
-            while (!pool.isTerminated()) {
-                // Wait for all threads to finish
-            }
-
-            long endTime = System.nanoTime();
-
-            long duration = (endTime - startTime);  // divide by 1000000 to get milliseconds.
-
-            System.out.println("Time taken: " + duration / 1000000 + "ms");
-
-            ui.display();
-
-            // System.out.println(ui.getMousePos());
-            double mouseX = Math.min(Math.max(ui.getMousePos().getX(), 0), width);
-            double mouseY = Math.min(Math.max(ui.getMousePos().getY(), 0), height);
-            double cameraYaw = ((mouseX / width) - 0.5d) * 1.2d;
-            double cameraPitch = ((mouseY / height) - 0.5d) * 1.2d;
-            camera.setRotation(cameraPitch, 0.0, cameraYaw);
+        for (int u = 0; u < numTiles; u++) {
+            tasks[u] = new RenderTask(u, tileSize, renderer, ui);
         }
+
+        ExecutorService pool = Executors.newFixedThreadPool(8);
+        long startTime = System.nanoTime();
+
+        for (int u = 0; u < numTiles; u++) {
+            pool.execute(tasks[u]);
+        }
+
+        pool.shutdown();
+
+        while (!pool.isTerminated()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            ui.display();
+            // Wait for all threads to finish
+        }
+
+        long endTime = System.nanoTime();
+
+        long duration = (endTime - startTime);  // divide by 1000000 to get milliseconds.
+
+        System.out.println("Time taken: " + duration / 1000000 + "ms");
+
+        ui.display();
+
 
         if (save) {
             File file = new File("render.png");
@@ -144,21 +127,48 @@ public class Main {
 }
 
 class RenderTask implements Runnable {
-    private final int x;
+    private final int tile;
+    private final int tileSize;
+    private final int height;
+    private final int width;
     private final MarchingRenderer renderer;
     private final UI ui;
+    private final int numTilesX;
+    private final int numTilesY;
 
-    public RenderTask(int x, MarchingRenderer renderer, UI ui) {
-        this.x = x;
+    public RenderTask(int tile, int tileSize, MarchingRenderer renderer, UI ui) {
         this.renderer = renderer;
         this.ui = ui;
+        this.height = renderer.getCamera().getHeight();
+        this.width = renderer.getCamera().getWidth();
+        this.tile = tile;
+        this.tileSize = tileSize;
+        this.numTilesX = (int) Math.ceil((double) this.width / tileSize);
+        this.numTilesY = (int) Math.ceil((double) this.height / tileSize);
     }
 
     public void run() {
-        for (int y = 0; y < renderer.getCamera().getHeight(); y++) {
-            Color color = renderer.renderPixel(x, y);
-            ui.drawPixel(x, y, color);
-            ui.display();
+
+        int ia = this.tileSize * (this.tile % this.numTilesX);
+        int ja = this.tileSize * (this.tile / this.numTilesX);
+        int x, y;
+
+        // for every pixel in this tile, compute color
+        for (int i = 0; i < this.tileSize; i++) {
+            for (int j = 0; j < this.tileSize; j++) {
+                x = ia + i;
+                y = ja + j;
+
+                if (x >= width) {
+                    continue;
+                }
+                if (y >= height) {
+                    continue;
+                }
+
+                Color color = renderer.renderPixel(x, y);
+                ui.drawPixel(x, y, color);
+            }
         }
     }
 }
