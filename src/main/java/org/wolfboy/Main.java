@@ -69,12 +69,17 @@ public class Main {
 
         MarchingObject[] objects = new MarchingObject[6];
         objects[5] = new Box(new SolidMaterial(new Color(225, 157, 128)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
-        objects[4] = new Plane(new TextureMaterial(clayLime), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
+        //objects[5] = new Box(new TextureMaterial(stoneBricksMossy), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
+        objects[4] = new Plane(new TextureMaterial(anvil), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
         objects[3] = new Sphere(new SolidMaterial(new Color(142, 202, 125)), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
+        //objects[3] = new Sphere(new TextureMaterial(netherite), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
         objects[2] = new Sphere(new SolidMaterial(new Color(202, 190, 72)), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
+        //objects[2] = new Sphere(new TextureMaterial(stoneBricks), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
         objects[1] = new Sphere(new SolidMaterial(new Color(80, 109, 154)), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
+        //objects[1] = new Sphere(new TextureMaterial(respawn), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
         objects[0] = new Sphere(new SolidMaterial(new Color(202, 82, 192)), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
-        // objects[0] = new Fractal(new Material(new Color(121, 225, 194)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{0.0d, 0.0d, 0.0d}, new double[]{1.0d, 1.0d, 1.0d});
+        //objects[0] = new Sphere(new TextureMaterial(blackConcrete), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
+        //objects[0] = new Fractal(new Material(new Color(121, 225, 194)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{0.0d, 0.0d, 0.0d}, new double[]{1.0d, 1.0d, 1.0d});
 
         MarchingScene scene = new MarchingScene(objects, lights);
 
