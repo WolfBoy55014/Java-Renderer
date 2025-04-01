@@ -34,4 +34,29 @@ public class Box extends MarchingObject {
         double[] d = LinearAlgebra.sub(LinearAlgebra.abs(p), this.sides);
         return Math.max(d[0], Math.max(d[1], d[2]));
     }
+
+    @Override
+    public double[] getNormal(double[] p) {
+        p = this.transformPoint(p);
+
+        if (p[0] >= this.sides[0]) {
+            return new double[]{1.0d, 0.0d, 0.0d};
+        }
+        if (p[1] >= this.sides[1]) {
+            return new double[]{0.0d, 1.0d, 0.0d};
+        }
+        if (p[2] >= this.sides[2]) {
+            return new double[]{0.0d, 0.0d, 1.0d};
+        }
+        if (p[0] <= -this.sides[0]) {
+            return new double[]{-1.0d, 0.0d, 0.0d};
+        }
+        if (p[1] <= -this.sides[1]) {
+            return new double[]{0.0d, -1.0d, 0.0d};
+        }
+        if (p[2] <= -this.sides[2]) {
+            return new double[]{0.0d, 0.0d, -1.0d};
+        }
+        return new double[]{0.0d, 0.0d, 1.0d};
+    }
 }

@@ -1,47 +1,16 @@
 package org.wolfboy.renderer.generic;
 
-import java.awt.*;
-import java.util.Arrays;
+public interface Material {
 
-public class Material {
+    double[] getAlbedo(double[] p, double[] uv);
 
-    protected double[] albedo; // Surface "color" in [0, 1]
-    protected float reflectivity;
-    protected float transparency;
-    protected float refractiveIndex;
+    float getRoughness(double[] p, double[] uv);
 
-    public Material(double[] color, float reflectivity, float transparency, float refractiveIndex) {
-        this.albedo = color;
-        this.reflectivity = reflectivity;
-        this.transparency = transparency;
-        this.refractiveIndex = refractiveIndex;
-    }
+    float getSpecular(double[] p, double[] uv);
 
-    public Material(Color color, float reflectivity, float transparency, float refractiveIndex) {
-        this(new double[]{color.getRed() / 255.0d, color.getGreen() / 255.0d, color.getBlue() / 255.0d}, reflectivity, transparency, refractiveIndex);
-    }
+    float getMetalic(double[] p, double[] uv);
 
-    public Material(double[] color) {
-        this(color, 0, 0, 0);
-    }
+    float getTransmission(double[] p, double[] uv);
 
-    public Material(Color color) {
-        this(color, 0, 0, 0);
-    }
-
-    public double[] getColor() {
-        return this.albedo;
-    }
-
-    public float getReflectivity() {
-        return reflectivity;
-    }
-
-    public float getTransparency() {
-        return transparency;
-    }
-
-    public float getRefractiveIndex() {
-        return refractiveIndex;
-    }
+    float getEmission(double[] p, double[] uv);
 }

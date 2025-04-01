@@ -1,9 +1,12 @@
 package org.wolfboy;
 
 import org.wolfboy.renderer.generic.Material;
+import org.wolfboy.renderer.generic.SolidMaterial;
+import org.wolfboy.renderer.generic.TextureMaterial;
 import org.wolfboy.renderer.marching.MarchingCamera;
 import org.wolfboy.renderer.marching.MarchingRenderer;
 import org.wolfboy.renderer.marching.MarchingScene;
+import org.wolfboy.renderer.marching.lights.DirectionalLight;
 import org.wolfboy.renderer.marching.lights.DiskLight;
 import org.wolfboy.renderer.marching.lights.MarchingLight;
 import org.wolfboy.renderer.marching.objects.MarchingObject;
@@ -27,34 +30,37 @@ public class Main {
         // 480p (854 * 480)
         // 360p (640 * 360)
 
-        final int width = 7680;
-        final int height = 4320;
+        final int width = 1920;
+        final int height = 1080;
         final boolean save = false;
+        final int SPP = 64;
 
         UI ui = new UI(width, height);
         MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.0d);
         camera.setRotation(-0.5d, 0.0d, 0.2d);
         camera.setPosition(-1.0d, -7.0d, 3.0d);
 
-        MarchingLight[] lights = new MarchingLight[2];
-        //lights[2] = new DirectionalLight(new double[]{0.0d, 0.65d, 0.1d}, new Color(255, 255, 255), 500);
+        File check = new File("check.png");
+
+        MarchingLight[] lights = new MarchingLight[3];
+        lights[2] = new DirectionalLight(new double[]{-0.1d, 0.65d, 0.1d}, new Color(255, 255, 255), 200);
         //lights[1] = new DirectionalLight(new double[]{0.0d, 0.7d, 0.0d}, new Color(255, 255, 255), 500);
         //lights[0] = new DirectionalLight(new double[]{0.0d, 0.75d, -0.1d}, new Color(255, 255, 255), 500);
-        lights[1] = new DiskLight(new double[]{0.0d, 1.0d, 3.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 100000000, 10.0d);
-        lights[0] = new DiskLight(new double[]{0.0d, 0.0d, 4.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 400000, 2.0d);
+        // lights[1] = new DiskLight(new double[]{0.0d, 1.0d, 3.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 200000000, 10.0d);
+        lights[0] = new DiskLight(new double[]{0.0d, 0.0d, 5.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 50000000, 5.0d);
 
         MarchingObject[] objects = new MarchingObject[6];
-        objects[5] = new Box(new Material(new Color(246, 189, 143)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
-        objects[4] = new Plane(new Material(new Color(255, 255, 255)), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
-        objects[3] = new Sphere(new Material(new Color(105, 234, 156)), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[2] = new Sphere(new Material(new Color(186, 204, 109)), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[1] = new Sphere(new Material(new Color(200, 128, 228)), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
-        objects[0] = new Sphere(new Material(new Color(121, 216, 225)), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[5] = new Box(new SolidMaterial(new Color(246, 189, 143)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
+        objects[4] = new Plane(new TextureMaterial(check), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
+        objects[3] = new Sphere(new SolidMaterial(new Color(105, 234, 156)), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
+        objects[2] = new Sphere(new SolidMaterial(new Color(186, 204, 109)), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
+        objects[1] = new Sphere(new SolidMaterial(new Color(200, 128, 228)), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[0] = new Sphere(new SolidMaterial(new Color(121, 216, 225)), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
         // objects[0] = new Fractal(new Material(new Color(121, 225, 194)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{0.0d, 0.0d, 0.0d}, new double[]{1.0d, 1.0d, 1.0d});
 
         MarchingScene scene = new MarchingScene(objects, lights);
 
-        MarchingRenderer renderer = new MarchingRenderer(scene, camera);
+        MarchingRenderer renderer = new MarchingRenderer(scene, camera, SPP);
 
         Runnable[] tasks = new Runnable[width];
 

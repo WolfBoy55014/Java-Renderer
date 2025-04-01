@@ -226,17 +226,21 @@ public class LinearAlgebra {
         // Transform point to account for object position, rotation, and scale
         p = LinearAlgebra.sub(p, position);
 
-        double[] roll = LinearAlgebra.rot(new double[]{p[0], p[2]}, rotation[1]);
-        p[0] = roll[0];
-        p[2] = roll[1];
+        if (rotation[0] != 0.0d | rotation[1] != 0.0d | rotation[2] != 0.0d) {
 
-        double[] pitch = LinearAlgebra.rot(new double[]{p[1], p[2]}, -rotation[0]);
-        p[1] = pitch[0];
-        p[2] = pitch[1];
+            double[] roll = LinearAlgebra.rot(new double[]{p[0], p[2]}, rotation[1]);
+            p[0] = roll[0];
+            p[2] = roll[1];
 
-        double[] yaw = LinearAlgebra.rot(new double[]{p[0], p[1]}, rotation[2]);
-        p[0] = yaw[0];
-        p[1] = yaw[1];
+            double[] pitch = LinearAlgebra.rot(new double[]{p[1], p[2]}, -rotation[0]);
+            p[1] = pitch[0];
+            p[2] = pitch[1];
+
+            double[] yaw = LinearAlgebra.rot(new double[]{p[0], p[1]}, rotation[2]);
+            p[0] = yaw[0];
+            p[1] = yaw[1];
+
+        }
 
         if (scale[0] != 1.0d && scale[1] != 1.0d && scale[2] != 1.0d) {
             p = LinearAlgebra.div(p, scale);
