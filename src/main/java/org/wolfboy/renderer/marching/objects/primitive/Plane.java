@@ -61,23 +61,23 @@ public class Plane extends MarchingObject {
         } else if (this.axis == 'z') {
             if (p[2] < 0) {
                 n = new double[]{0.0d, 0.0d, 1.0d};
-                bn = new double[]{0.0d, 1.0d, 0.0d};
+                bn = new double[]{0.0d, -1.0d, 0.0d};
                 t = new double[]{1.0d, 0.0d, 0.0d};
             } else {
                 n = new double[]{0.0d, 0.0d, -1.0d};
-                bn = new double[]{0.0d, -1.0d, 0.0d};
+                bn = new double[]{0.0d, 1.0d, 0.0d};
                 t = new double[]{-1.0d, 0.0d, 0.0d};
             }
         }
 
-        double[] nt = this.material.getNormal(p, this.getUV(p));
+        double[] nt = this.material.getNormal(p, this.getUV(p, n));
         // (T * N_ts.x) + (B * N_ts.y) + (N * N_ts.z)
-        n = LinearAlgebra.add(LinearAlgebra.add(LinearAlgebra.mul(t, nt[0]), LinearAlgebra.mul(bn, nt[1])), LinearAlgebra.mul(n, nt[2]));
+        n = LinearAlgebra.add(LinearAlgebra.add(LinearAlgebra.add(LinearAlgebra.mul(t, nt[0]), LinearAlgebra.mul(bn, nt[1])), LinearAlgebra.mul(n, nt[2])), n);
         return LinearAlgebra.normalize(n);
     }
 
     @Override
-    public double[] getUV(double[] p) {
+    public double[] getUV(double[] p, double[] n) {
         if (this.axis == 'z') {
             return LinearAlgebra.mod(new double[]{p[0], p[1], 0.0d}, 1.0d);
         }

@@ -26,10 +26,6 @@ public class Object {
         return rotation;
     }
 
-    public double[] getUV(double[] p) {
-        return new double[]{0.0d, 0.0d};
-    }
-
     public double[] getScale() {
         return scale;
     }

@@ -36,7 +36,7 @@ public class Sphere extends MarchingObject {
     }
 
     @Override
-    public double[] getUV(double[] p) {
+    public double[] getUV(double[] p, double[] n) {
         p = this.transformPoint(p);
 
         double x = 0.5 + (Math.atan2(p[1], p[0]) / (2 * Math.PI));

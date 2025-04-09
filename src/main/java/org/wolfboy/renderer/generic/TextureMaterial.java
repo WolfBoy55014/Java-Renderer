@@ -11,6 +11,7 @@ import java.util.Arrays;
 
 public class TextureMaterial implements Material {
 
+    private double scale;
     private BufferedImage albedo;
     private BufferedImage normal;
     private BufferedImage roughness;
@@ -18,7 +19,9 @@ public class TextureMaterial implements Material {
     private BufferedImage metalic;
     private BufferedImage transmission;
 
-    public TextureMaterial(File albedo, File normal) {
+    public TextureMaterial(double scale, File albedo, File normal) {
+        this.scale = scale;
+
         try {
             this.albedo = ImageIO.read(albedo);
             this.normal = ImageIO.read(normal);
@@ -27,7 +30,9 @@ public class TextureMaterial implements Material {
         }
     }
 
-    public TextureMaterial(File albedo) {
+    public TextureMaterial(double scale, File albedo) {
+        this.scale = scale;
+
         try {
             this.albedo = ImageIO.read(albedo);
         } catch (IOException e) {
@@ -46,7 +51,8 @@ public class TextureMaterial implements Material {
             return new double[]{0.0d, 0.0d, 0.0d};
         }
 
-        return this.getColorAtUV(this.normal, uv);
+        double[] n = LinearAlgebra.sub(LinearAlgebra.mul(this.getColorAtUV(this.normal, uv), 2.0d), 1.0d);
+        return n;
     }
 
     @Override
@@ -75,6 +81,7 @@ public class TextureMaterial implements Material {
     }
 
     private double[] getColorAtUV(BufferedImage image, double[] uv) {
+        uv = new double[]{uv[0] * this.scale, uv[1] * this.scale};
         int x = (int) (uv[0] * (image.getWidth()));
         int y = (int) (uv[1] * (image.getHeight()));
         x = Math.min(x, image.getWidth() - 1);

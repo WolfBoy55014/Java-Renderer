@@ -4,13 +4,12 @@ import org.wolfboy.renderer.generic.TextureMaterial;
 import org.wolfboy.renderer.marching.MarchingCamera;
 import org.wolfboy.renderer.marching.MarchingRenderer;
 import org.wolfboy.renderer.marching.MarchingScene;
-import org.wolfboy.renderer.marching.lights.DiskLight;
-import org.wolfboy.renderer.marching.lights.MarchingLight;
-import org.wolfboy.renderer.marching.lights.SquareLight;
+import org.wolfboy.renderer.marching.lights.*;
 import org.wolfboy.renderer.marching.objects.MarchingObject;
 import org.wolfboy.renderer.marching.objects.primitive.Box;
 import org.wolfboy.renderer.marching.objects.primitive.Plane;
 import org.wolfboy.renderer.marching.objects.primitive.Sphere;
+import org.wolfboy.renderer.marching.objects.primitive.Torus;
 import org.wolfboy.ui.UI;
 
 import java.awt.*;
@@ -40,20 +39,13 @@ public class Main {
         camera.setPosition(-1.0d, -7.0d, 3.0d);
 
         File check = new File("check.png");
-        File barrel = new File("barrel_bottom.png");
-        File debug = new File("debug.png");
-        File cobble = new File("cobblestone.png");
-        File gilded = new File("gilded_blackstone.png");
-        File emerald = new File("emerald_block.png");
-        File log = new File("spruce_log_top.png");
-        File leaves = new File("cherry_leaves.png");
-        File sand = new File("sand.png");
-        File sandNormal = new File("sand_n.png");
-        File terracotta = new File("terracotta.png");
-        File cyan = new File("cyan_glazed_terracotta.png");
         File uv = new File("uv.png");
-        File bricks = new File("stone_bricks.png");
-        File bricksNormal = new File("stone_bricks_n.png");
+        File tile = new File("glossy-marble-tile_albedo.png");
+        File tileNormal = new File("glossy-marble-tile_normal-ogl.png");
+        File wood = new File("older-wood-flooring_albedo.png");
+        File woodNormal = new File("older-wood-flooring_normal-ogl.png");
+        File mortar = new File("sloppy-mortar-stone-wall_albedo.png");
+        File mortarNormal = new File("sloppy-mortar-stone-wall_normal-ogl.png");
 
         MarchingLight[] lights = new MarchingLight[3];
         // lights[2] = new DirectionalLight(new double[]{-0.7d, 0.3d, 0.1d}, new Color(255, 255, 255), 2);
@@ -63,13 +55,13 @@ public class Main {
         lights[0] = new DiskLight(new double[]{0.0d, -0.2d, 5.0d}, new double[]{0.0d, 0.0d, 0.0d}, new Color(255, 255, 255), 120000, 5.0d);
 
         MarchingObject[] objects = new MarchingObject[7];
-        objects[6] = new Box(new TextureMaterial(bricks, bricksNormal), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
-        // objects[5] = new Torus(new TextureMaterial(cyan), new double[]{0.0d, 0.0d, 0.0d}, 0.5d, 1.0d);
-        objects[4] = new Plane(new TextureMaterial(sand, sandNormal), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
-        objects[3] = new Sphere(new TextureMaterial(leaves), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[2] = new Sphere(new TextureMaterial(gilded), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[1] = new Sphere(new TextureMaterial(log), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
-        objects[0] = new Sphere(new TextureMaterial(terracotta), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
+        // objects[6] = new Box(new TextureMaterial(1.0d, bricks, bricksNormal), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
+        objects[5] = new Torus(new TextureMaterial(1.0d, uv), new double[]{0.0d, 0.0d, 0.0d}, 0.5d, 1.0d);
+        objects[4] = new Plane(new TextureMaterial(1.0d, mortar, mortarNormal), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
+        objects[3] = new Sphere(new TextureMaterial(1.0d, wood), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
+        objects[2] = new Sphere(new TextureMaterial(1.0d, tile), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
+        objects[1] = new Sphere(new TextureMaterial(1.0d, check), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[0] = new Sphere(new TextureMaterial(1.0d, check), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
         // objects[0] = new Fractal(new Material(new Color(121, 225, 194)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{0.0d, 0.0d, 0.0d}, new double[]{1.0d, 1.0d, 1.0d});
 
         MarchingScene scene = new MarchingScene(objects, lights);

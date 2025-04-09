@@ -55,7 +55,7 @@ public class MarchingRenderer extends Renderer {
             double[] p = ray.getPosition();
             double[] n = this.scene.getNormal(p);
             MarchingObject nearestObject = this.scene.getNearestObject(p);
-            double[] uv = nearestObject.getUV(p);
+            double[] uv = nearestObject.getUV(p, n);
             double[] albedo = LinearAlgebra.div(nearestObject.getMaterial().getAlbedo(p, uv), Math.PI);
             double[] illumination = new double[]{0.0d, 0.0d, 0.0d};
 
@@ -84,6 +84,7 @@ public class MarchingRenderer extends Renderer {
             color[2] += albedo[2] * illumination[2];
             // color = LinearAlgebra.add(color, new double[]{uv[0], uv[1], 0.0d});
             // color = LinearAlgebra.add(LinearAlgebra.div(LinearAlgebra.add(n, 1.0d), 2.0d), color);
+            // color = LinearAlgebra.abs(n);
         }
         color[0] /= SPP;
         color[1] /= SPP;
@@ -106,7 +107,7 @@ public class MarchingRenderer extends Renderer {
         //     color = new Color(0, 0, 255);
         // }
 
-        return new Color(((int) (color[0])), ((int) (color[1])), ((int) (color[2])));
-        // return new Color(Math.min((int) (color[0]), 255), Math.min((int) (color[1]), 255), Math.min((int) (color[2]), 255));
+        // return new Color(((int) (color[0])), ((int) (color[1])), ((int) (color[2])));
+        return new Color(Math.min((int) (color[0]), 255), Math.min((int) (color[1]), 255), Math.min((int) (color[2]), 255));
     }
 }
