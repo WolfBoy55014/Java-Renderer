@@ -29,10 +29,11 @@ public class UI {
         this.pane.add(this.renderPanel, BorderLayout.CENTER);
 
         this.frame.setVisible(true);
-        Insets insets = frame.getInsets();
-        this.frame.setSize(width + insets.left + insets.right, height + insets.top + insets.bottom);
 
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        Insets insets = frame.getInsets();
+        this.frame.setSize(width + insets.left + insets.right, height + insets.top + insets.bottom);
     }
 
     public void drawPixel(int x, int y, Color color) {

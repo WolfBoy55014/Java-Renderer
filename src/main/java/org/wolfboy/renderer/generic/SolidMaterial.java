@@ -24,6 +24,11 @@ public class SolidMaterial implements Material {
     }
 
     @Override
+    public double[] getNormal(double[] p, double[] uv) {
+        return new double[]{0.0d, 0.0d, 0.0d};
+    }
+
+    @Override
     public float getRoughness(double[] p, double[] uv) {
         return 0;
     }

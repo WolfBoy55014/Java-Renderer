@@ -41,6 +41,29 @@ public class MarchingObject extends Object {
         return LinearAlgebra.normalize(n);
     }
 
+    public double[] getBinormal(double[] n) {
+        return new double[]{n[0], -n[2], n[1]};
+    }
+
+    public double[] getTangent(double[] n) {
+        return new double[]{n[2], n[1], -n[0]};
+    }
+
+    public double[] getUV(double[] p, double[] n) {
+        p = this.transformPoint(p);
+
+        double xXY = p[0] / 2.0d + 0.5d;
+        double yXY = p[1] / 2.0d + 0.5d;
+        double xYZ = p[1] / 2.0d + 0.5d;
+        double yYZ = p[2] / 2.0d + 0.5d;
+        double xXZ = p[0] / 2.0d + 0.5d;
+        double yXZ = p[2] / 2.0d + 0.5d;
+
+        n = LinearAlgebra.abs(n);
+
+        return new double[]{xXY * n[2] + xXZ * n[1] + xYZ * n[0], yXY * n[2] + yXZ * n[1] + yYZ * n[0]};
+    }
+
     public double[] transformPoint(double[] p) {
         return LinearAlgebra.toLocal(p, this.position, this.rotation, this.scale);
     }

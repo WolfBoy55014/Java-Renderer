@@ -5,6 +5,7 @@ import org.wolfboy.renderer.generic.Material;
 import org.wolfboy.renderer.marching.objects.MarchingObject;
 
 import javax.sound.sampled.Line;
+import java.util.Arrays;
 
 public class Box extends MarchingObject {
 
@@ -39,24 +40,55 @@ public class Box extends MarchingObject {
     public double[] getNormal(double[] p) {
         p = this.transformPoint(p);
 
+        double[] n = new double[] {1.0d, 0.0d, 0.0d};
+//        double[] bn = new double[] {0.0d, 1.0d, 0.0d};
+//        double[] t = new double[] {0.0d, 0.0d, 1.0d};
+//        double[] nt = this.material.getNormal(p, this._getUV(p));
+
         if (p[0] >= this.sides[0]) {
-            return new double[]{1.0d, 0.0d, 0.0d};
+            n = new double[]{1.0d, 0.0d, 0.0d};
+//            bn = new double[]{0.0d, 0.0d, 1.0d};
+//            t = new double[]{0.0d, 1.0d, 0.0d};
+        } else if (p[1] >= this.sides[1]) {
+            n = new double[]{0.0d, 1.0d, 0.0d};
+//            bn = new double[]{0.0d, 0.0d, 1.0d};
+//            t = new double[]{1.0d, 0.0d, 0.0d};
+        } else if (p[2] >= this.sides[2]) {
+            n = new double[]{0.0d, 0.0d, 1.0d};
+//            bn = new double[]{0.0d, 1.0d, 0.0d};
+//            t = new double[]{1.0d, 0.0d, 0.0d};
+        } else if (p[0] <= -this.sides[0]) {
+            n = new double[]{-1.0d, 0.0d, 0.0d};
+//            bn = new double[]{0.0d, 0.0d, 1.0d};
+//            t = new double[]{0.0d, 1.0d, 0.0d};
+        } else if (p[1] <= -this.sides[1]) {
+            n = new double[]{0.0d, -1.0d, 0.0d};
+//            bn = new double[]{0.0d, 0.0d, 1.0d};
+//            t = new double[]{1.0d, 0.0d, 0.0d};
+        } else if (p[2] <= -this.sides[2]) {
+            n = new double[]{0.0d, 0.0d, -1.0d};
+//            bn = new double[]{0.0d, 1.0d, 0.0d};
+//            t = new double[]{1.0d, 0.0d, 0.0d};
         }
-        if (p[1] >= this.sides[1]) {
-            return new double[]{0.0d, 1.0d, 0.0d};
-        }
-        if (p[2] >= this.sides[2]) {
-            return new double[]{0.0d, 0.0d, 1.0d};
-        }
-        if (p[0] <= -this.sides[0]) {
-            return new double[]{-1.0d, 0.0d, 0.0d};
-        }
-        if (p[1] <= -this.sides[1]) {
-            return new double[]{0.0d, -1.0d, 0.0d};
-        }
-        if (p[2] <= -this.sides[2]) {
-            return new double[]{0.0d, 0.0d, -1.0d};
-        }
-        return new double[]{0.0d, 0.0d, 1.0d};
+
+        // (T * N_ts.x) + (B * N_ts.y) + (N * N_ts.z)
+//        n = LinearAlgebra.add(LinearAlgebra.add(LinearAlgebra.mul(t, nt[0]), LinearAlgebra.mul(bn, nt[1])), LinearAlgebra.mul(n, nt[2]));
+        return LinearAlgebra.normalize(n);
+    }
+
+    @Override
+    public double[] getUV(double[] p, double[] n) {
+        p = this.transformPoint(p);
+
+        double xXY = (p[0] + sides[0]) / 2.0d % (1 / (sides[0] * 2.0d)) * (sides[0] * 2.0d);
+        double yXY = (p[1] + sides[1]) / 2.0d % (1 / (sides[1] * 2.0d)) * (sides[1] * 2.0d);
+        double xYZ = (p[1] + sides[1]) / 2.0d % (1 / (sides[1] * 2.0d)) * (sides[1] * 2.0d);
+        double yYZ = (p[2] + sides[2]) / 2.0d % (1 / (sides[2] * 2.0d)) * (sides[2] * 2.0d);
+        double xXZ = (p[0] + sides[0]) / 2.0d % (1 / (sides[0] * 2.0d)) * (sides[0] * 2.0d);
+        double yXZ = (p[2] + sides[2]) / 2.0d % (1 / (sides[2] * 2.0d)) * (sides[2] * 2.0d);
+
+        n = LinearAlgebra.abs(n);
+
+        return new double[]{xXY * n[2] + xXZ * n[1] + xYZ * n[0], yXY * n[2] + yXZ * n[1] + yYZ * n[0]};
     }
 }
