@@ -51,7 +51,8 @@ public class TextureMaterial implements Material {
             return new double[]{0.0d, 0.0d, 0.0d};
         }
 
-        double[] n = LinearAlgebra.sub(LinearAlgebra.mul(this.getColorAtUV(this.normal, uv), 2.0d), 1.0d);
+        double[] n = this.getColorAtUV(this.normal, uv);
+        n = LinearAlgebra.add(LinearAlgebra.sub(LinearAlgebra.mul(n, 2.0d), 1.0d), n);
         return n;
     }
 

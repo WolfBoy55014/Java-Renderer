@@ -48,6 +48,7 @@ public class Main {
         File mortarNormal = new File("sloppy-mortar-stone-wall_normal-ogl.png");
 
         MarchingLight[] lights = new MarchingLight[3];
+        // lights[2] = new PointLight(new double[]{2.0d, 0.0d, 1.0d}, new Color(255, 255, 255), 500);
         // lights[2] = new DirectionalLight(new double[]{-0.7d, 0.3d, 0.1d}, new Color(255, 255, 255), 2);
         // lights[1] = new DirectionalLight(new double[]{0.0d, 0.7d, 0.0d}, new Color(255, 255, 255), 500);
         // lights[0] = new DirectionalLight(new double[]{0.0d, 0.75d, -0.1d}, new Color(255, 255, 255), 500);

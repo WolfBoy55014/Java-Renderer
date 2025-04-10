@@ -47,16 +47,22 @@ public class Plane extends MarchingObject {
         if (this.axis == 'x') {
             if (p[0] < 0) {
                 n = new double[]{1.0d, 0.0d, 0.0d};
-                bn = new double[]{0.0d, 0.0d, 1.0d};
+                bn = new double[]{0.0d, 0.0d, -1.0d};
                 t = new double[]{0.0d, 1.0d, 0.0d};
             } else {
                 n = new double[]{-1.0d, 0.0d, 0.0d};
+                bn = new double[]{0.0d, 0.0d, -1.0d};
+                t = new double[]{0.0d, 1.0d, 0.0d};
             }
         } else if (this.axis == 'y') {
             if (p[1] < 0) {
                 n = new double[]{0.0d, 1.0d, 0.0d};
+                bn = new double[]{0.0d, 0.0d, 1.0d};
+                t = new double[]{-1.0d, 0.0d, 0.0d};
             } else {
                 n = new double[]{0.0d, -1.0d, 0.0d};
+                bn = new double[]{0.0d, 0.0d, -1.0d};
+                t = new double[]{1.0d, 0.0d, 0.0d};
             }
         } else if (this.axis == 'z') {
             if (p[2] < 0) {
@@ -72,7 +78,7 @@ public class Plane extends MarchingObject {
 
         double[] nt = this.material.getNormal(p, this.getUV(p, n));
         // (T * N_ts.x) + (B * N_ts.y) + (N * N_ts.z)
-        n = LinearAlgebra.add(LinearAlgebra.add(LinearAlgebra.add(LinearAlgebra.mul(t, nt[0]), LinearAlgebra.mul(bn, nt[1])), LinearAlgebra.mul(n, nt[2])), n);
+        n = LinearAlgebra.add(LinearAlgebra.add(LinearAlgebra.mul(t, nt[0]), LinearAlgebra.mul(bn, nt[1])), LinearAlgebra.mul(n, nt[2]));
         return LinearAlgebra.normalize(n);
     }
 
