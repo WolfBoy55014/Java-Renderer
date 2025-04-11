@@ -271,4 +271,12 @@ public class LinearAlgebra {
         p = LinearAlgebra.add(p, position);
         return p;
     }
+
+    public static double[] cross(double[] v1, double[] v2) {
+        double[] result = new double[3];
+        result[0] = v1[1] * v2[2] - v1[2] * v2[1];
+        result[1] = v1[2] * v2[0] - v1[0] * v2[2];
+        result[2] = v1[0] * v2[1] - v1[1] * v2[0];
+        return result;
+    }
 }

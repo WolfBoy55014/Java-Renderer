@@ -30,8 +30,8 @@ public class Main {
         final int width = 1920;
         final int height = 1080;
         final boolean save = false;
-        final int SPP = 16;
-        final int tileSize = 16;
+        final int SPP = 8;
+        final int tileSize = 32;
 
         UI ui = new UI(width, height);
         MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.0d);
@@ -46,9 +46,13 @@ public class Main {
         File woodNormal = new File("older-wood-flooring_normal-ogl.png");
         File mortar = new File("sloppy-mortar-stone-wall_albedo.png");
         File mortarNormal = new File("sloppy-mortar-stone-wall_normal-ogl.png");
+        File space = new File("filthy-space-panels_albedo.png");
+        File spaceNormal = new File("filthy-space-panels_normal-ogl.png");
+        File siding = new File("stone-house-siding_albedo.png");
+        File sidingNormal = new File("stone-house-siding_normal-ogl.png");
 
         MarchingLight[] lights = new MarchingLight[3];
-        // lights[2] = new PointLight(new double[]{2.0d, 0.0d, 1.0d}, new Color(255, 255, 255), 500);
+        // lights[2] = new PointLight(new double[]{0.0d, 0.0d, 5.0d}, new Color(255, 255, 255), 2000);
         // lights[2] = new DirectionalLight(new double[]{-0.7d, 0.3d, 0.1d}, new Color(255, 255, 255), 2);
         // lights[1] = new DirectionalLight(new double[]{0.0d, 0.7d, 0.0d}, new Color(255, 255, 255), 500);
         // lights[0] = new DirectionalLight(new double[]{0.0d, 0.75d, -0.1d}, new Color(255, 255, 255), 500);
@@ -59,10 +63,10 @@ public class Main {
         // objects[6] = new Box(new TextureMaterial(1.0d, bricks, bricksNormal), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
         objects[5] = new Torus(new TextureMaterial(1.0d, uv), new double[]{0.0d, 0.0d, 0.0d}, 0.5d, 1.0d);
         objects[4] = new Plane(new TextureMaterial(1.0d, mortar, mortarNormal), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
-        objects[3] = new Sphere(new TextureMaterial(1.0d, wood), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[2] = new Sphere(new TextureMaterial(1.0d, tile), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[1] = new Sphere(new TextureMaterial(1.0d, check), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
-        objects[0] = new Sphere(new TextureMaterial(1.0d, check), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[3] = new Sphere(new TextureMaterial(1.0d, wood, woodNormal), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
+        objects[2] = new Sphere(new TextureMaterial(1.0d, tile, tileNormal), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
+        objects[1] = new Sphere(new TextureMaterial(1.0d, siding, sidingNormal), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[0] = new Sphere(new TextureMaterial(1.0d, space, spaceNormal), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
         // objects[0] = new Fractal(new Material(new Color(121, 225, 194)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{0.0d, 0.0d, 0.0d}, new double[]{1.0d, 1.0d, 1.0d});
 
         MarchingScene scene = new MarchingScene(objects, lights);

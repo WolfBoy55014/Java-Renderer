@@ -31,14 +31,29 @@ public class Sphere extends MarchingObject {
     @Override
     public double[] getNormal(double[] p) {
         p = this.transformPoint(p);
+        double[] n = LinearAlgebra.normalize(p);
+        double[] nt = this.material.getNormal(p, this._getUV(p));
 
-        return LinearAlgebra.normalize(p);
+        if (LinearAlgebra.accumulate(nt) == 0.0d) {
+            return n;
+        }
+
+        double[] q = LinearAlgebra.sphericalToCartesian(LinearAlgebra.add(LinearAlgebra.cartesianToSpherical(p), new double[]{0.001d, 0.0d, 0.0d}));
+        double[] bn = LinearAlgebra.normalize(LinearAlgebra.sub(q, p));
+        double[] t = LinearAlgebra.mul(LinearAlgebra.cross(bn, q), -1.0d);
+
+        n = LinearAlgebra.add(LinearAlgebra.add(LinearAlgebra.add(LinearAlgebra.mul(t, nt[0]), LinearAlgebra.mul(bn, nt[1])), LinearAlgebra.mul(n, nt[2])), n);
+
+        return LinearAlgebra.normalize(n);
     }
 
     @Override
     public double[] getUV(double[] p, double[] n) {
         p = this.transformPoint(p);
+        return this._getUV(p);
+    }
 
+    private double[] _getUV(double[] p) {
         double x = 0.5 + (Math.atan2(p[1], p[0]) / (2 * Math.PI));
         double y = 0.5 + (Math.asin(p[2] / this.radius) / Math.PI);
 

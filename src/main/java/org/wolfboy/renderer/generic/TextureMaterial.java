@@ -52,7 +52,7 @@ public class TextureMaterial implements Material {
         }
 
         double[] n = this.getColorAtUV(this.normal, uv);
-        n = LinearAlgebra.add(LinearAlgebra.sub(LinearAlgebra.mul(n, 2.0d), 1.0d), n);
+        n = LinearAlgebra.sub(LinearAlgebra.mul(n, 2.0d), 1.0d);
         return n;
     }
 

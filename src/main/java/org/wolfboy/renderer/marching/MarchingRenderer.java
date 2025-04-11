@@ -20,7 +20,7 @@ public class MarchingRenderer extends Renderer {
         this.scene = scene;
 
         MAX_DISTANCE = 100.0d;
-        MIN_DISTANCE = 0.001d;
+        MIN_DISTANCE = 0.0001d;
         this.SPP = SPP;
     }
 
