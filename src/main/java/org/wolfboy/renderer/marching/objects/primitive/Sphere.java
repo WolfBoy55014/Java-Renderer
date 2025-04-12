@@ -57,8 +57,6 @@ public class Sphere extends MarchingObject {
         double x = 0.5 + (Math.atan2(p[1], p[0]) / (2 * Math.PI));
         double y = 0.5 + (Math.asin(p[2] / this.radius) / Math.PI);
 
-        double diameter = this.radius * 2.0d;
-
-        return new double[]{x % (1 / diameter) * diameter, y % (1 / diameter) * diameter};
+        return new double[]{x, y};
     }
 }

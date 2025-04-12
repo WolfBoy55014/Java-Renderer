@@ -85,8 +85,8 @@ public class TextureMaterial implements Material {
         uv = new double[]{uv[0] * this.scale, uv[1] * this.scale};
         int x = (int) (uv[0] * (image.getWidth()));
         int y = (int) (uv[1] * (image.getHeight()));
-        x = Math.min(x, image.getWidth() - 1);
-        y = Math.min(y, image.getHeight() - 1);
+        x = (int) ((Math.abs(x) * this.scale) % image.getWidth());
+        y = (int) ((Math.abs(y) * this.scale) % image.getHeight());
 
         int color = 0;
         try {

@@ -85,13 +85,13 @@ public class Plane extends MarchingObject {
     @Override
     public double[] getUV(double[] p, double[] n) {
         if (this.axis == 'z') {
-            return LinearAlgebra.mod(new double[]{p[0], p[1], 0.0d}, 1.0d);
+            return new double[]{p[0], p[1], 0.0d};
         }
         if (this.axis == 'x') {
-            return LinearAlgebra.mod(new double[]{p[1], p[2], 0.0d}, 1.0d);
+            return new double[]{p[1], p[2], 0.0d};
         }
         if (this.axis == 'y') {
-            return LinearAlgebra.mod(new double[]{p[0], p[2], 0.0d}, 1.0d);
+            return new double[]{p[0], p[2], 0.0d};
         }
         return new double[3];
     }
