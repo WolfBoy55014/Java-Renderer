@@ -39,6 +39,7 @@ public class MarchingScene extends Scene {
             }
 
             double distance = object.getDistance(p);
+            // System.out.println("Boo: " + distance);
             if (distance < d) {
                 d = distance;
                 nearest = object;

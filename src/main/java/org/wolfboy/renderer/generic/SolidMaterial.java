@@ -29,27 +29,32 @@ public class SolidMaterial implements Material {
     }
 
     @Override
-    public float getRoughness(double[] p, double[] uv) {
-        return 0;
+    public double getDisplacement(double[] p, double[] uv) {
+        return 0.0d;
     }
 
     @Override
-    public float getSpecular(double[] p, double[] uv) {
-        return 0;
+    public double getRoughness(double[] p, double[] uv) {
+        return 0.0d;
     }
 
     @Override
-    public float getMetalic(double[] p, double[] uv) {
-        return 0;
+    public double getSpecular(double[] p, double[] uv) {
+        return 0.0d;
     }
 
     @Override
-    public float getTransmission(double[] p, double[] uv) {
-        return 0;
+    public double getMetalic(double[] p, double[] uv) {
+        return 0.0d;
     }
 
     @Override
-    public float getEmission(double[] p, double[] uv) {
-        return 0;
+    public double getTransmission(double[] p, double[] uv) {
+        return 0.0d;
+    }
+
+    @Override
+    public double getEmission(double[] p, double[] uv) {
+        return 0.0d;
     }
 }

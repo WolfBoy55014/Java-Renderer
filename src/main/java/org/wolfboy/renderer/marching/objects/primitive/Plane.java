@@ -20,20 +20,30 @@ public class Plane extends MarchingObject {
     @Override
     public double getDistance(double[] p) {
         p = this.transformPoint(p);
+        
+        double d = Double.MAX_VALUE;
 
         if (this.axis == 'x') {
-            return Math.abs(p[0] - this.position[0]);
+            d = Math.abs(p[0] - this.position[0]);
         }
 
         if (this.axis == 'y') {
-            return Math.abs(p[1] - this.position[1]);
+            d = Math.abs(p[1] - this.position[1]);
         }
 
         if (this.axis == 'z') {
-            return Math.abs(p[2] - this.position[2]);
+            d = Math.abs(p[2] - this.position[2]);
+            
+            double disp = this.material.getDisplacement(p, this._getUV(p));
+            if (disp != 0.0d) {
+                // System.out.println(disp);
+                d -= disp * 0.1d;
+                d *= Math.min(d, d * d * d);
+                // System.out.println(d);
+            }
         }
 
-        return Double.MAX_VALUE;
+        return d;
     }
 
     @Override
@@ -84,6 +94,10 @@ public class Plane extends MarchingObject {
 
     @Override
     public double[] getUV(double[] p, double[] n) {
+        return this._getUV(p);
+    }
+
+    private double[] _getUV(double[] p) {
         if (this.axis == 'z') {
             return new double[]{p[0], p[1], 0.0d};
         }

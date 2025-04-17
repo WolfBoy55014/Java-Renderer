@@ -6,13 +6,15 @@ public interface Material {
 
     double[] getNormal(double[] p, double[] uv);
 
-    float getRoughness(double[] p, double[] uv);
+    double getDisplacement(double[] p, double[] uv);
 
-    float getSpecular(double[] p, double[] uv);
+    double getRoughness(double[] p, double[] uv);
 
-    float getMetalic(double[] p, double[] uv);
+    double getSpecular(double[] p, double[] uv);
 
-    float getTransmission(double[] p, double[] uv);
+    double getMetalic(double[] p, double[] uv);
 
-    float getEmission(double[] p, double[] uv);
+    double getTransmission(double[] p, double[] uv);
+
+    double getEmission(double[] p, double[] uv);
 }

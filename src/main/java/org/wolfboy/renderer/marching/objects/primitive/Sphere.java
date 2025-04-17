@@ -24,13 +24,27 @@ public class Sphere extends MarchingObject {
     @Override
     public double getDistance(double[] p) {
         p = this.transformPoint(p);
+        double d = LinearAlgebra.magnitude(p) - this.radius;
 
-        return LinearAlgebra.magnitude(p) - this.radius;
+        double disp = this.material.getDisplacement(p, this._getUV(p));
+        if (disp != 0.0d) {
+            // System.out.println(disp);
+            double[] q = LinearAlgebra.mul(LinearAlgebra.normalize(p), this.radius + (disp * 0.1d));
+            d = Math.copySign(LinearAlgebra.distance(p, q), d);
+            d *= Math.min(d, d * d * d);
+            // System.out.println(d);
+        }
+
+        return d;
     }
 
     @Override
     public double[] getNormal(double[] p) {
         p = this.transformPoint(p);
+        return this._getNormal(p);
+    }
+
+    private double[] _getNormal(double[] p) {
         double[] n = LinearAlgebra.normalize(p);
         double[] nt = this.material.getNormal(p, this._getUV(p));
 

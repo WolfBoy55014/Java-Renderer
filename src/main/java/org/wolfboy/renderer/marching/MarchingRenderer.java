@@ -70,13 +70,16 @@ public class MarchingRenderer extends Renderer {
 
                 // Calculate shadows
                 // float d = RayMarch(p+n*SURF_DIST*2., l);
-                Ray shadowRay = new Ray(light_dir, LinearAlgebra.add(p, LinearAlgebra.mul(n, this.MIN_DISTANCE * 2.0d)));
+                Ray shadowRay = new Ray(light_dir, LinearAlgebra.add(p, LinearAlgebra.mul(n, this.MIN_DISTANCE * 20.0d)));
 
                 shadowRay = this.march(shadowRay, light_dist);
                 if (shadowRay.getDistance() >= light_dist) {
                     illumination = LinearAlgebra.add(illumination, LinearAlgebra.mul(light.getColor(), Math.max(LinearAlgebra.dot(n, light_dir), 0.0d) * light.getIntensity(p)));
                     // illumination = new double[]{shadowRay.getSteps(), shadowRay.getSteps(), shadowRay.getSteps()}; // Debug to see lighting calculation cost
                 }
+
+                // illumination = LinearAlgebra.add(illumination, LinearAlgebra.mul(light.getColor(), Math.max(LinearAlgebra.dot(n, light_dir), 0.0d) * light.getIntensity(p)));
+
             }
 
             color[0] += albedo[0] * illumination[0];
@@ -85,6 +88,7 @@ public class MarchingRenderer extends Renderer {
             // color = LinearAlgebra.add(color, new double[]{uv[0], uv[1], 0.0d});
             // color = LinearAlgebra.add(LinearAlgebra.div(LinearAlgebra.add(n, 1.0d), 2.0d), color);
             // color = LinearAlgebra.abs(n);
+            // color = LinearAlgebra.div(new double[]{ray.getSteps(), ray.getSteps(), ray.getSteps()}, 300.0d);
         }
         color[0] /= SPP;
         color[1] /= SPP;
