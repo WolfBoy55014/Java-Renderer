@@ -14,8 +14,17 @@ public class SolidMaterial implements Material {
         this.albedo = albedo;
     }
 
+    public SolidMaterial(double[] albedo, double metallic) {
+        this.albedo = albedo;
+        this.metalic = metallic;
+    }
+
     public SolidMaterial(Color albedo) {
         this(new double[]{albedo.getRed() / 255.0d, albedo.getGreen() / 255.0d, albedo.getBlue() / 255.0d});
+    }
+
+    public SolidMaterial(Color albedo, double metalic) {
+        this(new double[]{albedo.getRed() / 255.0d, albedo.getGreen() / 255.0d, albedo.getBlue() / 255.0d}, metalic);
     }
 
     @Override
@@ -45,7 +54,7 @@ public class SolidMaterial implements Material {
 
     @Override
     public double getMetalic(double[] p, double[] uv) {
-        return 0.0d;
+        return this.metalic;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package org.wolfboy.renderer.marching;
 
+import org.wolfboy.LinearAlgebra;
+
 import static org.wolfboy.LinearAlgebra.*;
 
 public class Ray {
@@ -52,5 +54,10 @@ public class Ray {
         this.position = add(this.position, deltaPose);
         this.distance += distance;
         this.steps++;
+    }
+
+    public void reflect(double[] n) {
+        // return I - 2 * dotProduct(I, N) * N;
+        this.direction = LinearAlgebra.sub(this.direction, LinearAlgebra.mul(LinearAlgebra.mul(n, LinearAlgebra.dot(n, this.direction)), 2.0d));
     }
 }
