@@ -59,12 +59,12 @@ public class MarchingRenderer extends Renderer {
     }
 
     public Color renderPixel(int x, int y) {
-        Ray ray = this.camera.getRayAtPixel(x, y);
         double[] bgColor = new double[]{0.0d, 0.0d, 0.0d};
         double[] color = new double[]{0.0d, 0.0d, 0.0d};
 
         for (int s = 0; s < SPP; s++) {
             this.reflectionRecursions = 0;
+            Ray ray = this.camera.getRayAtPixel(x, y); // Must be sampled each sample for proper DoF blur
             color = LinearAlgebra.add(color, this.renderWithRay(ray, bgColor));
         }
 
