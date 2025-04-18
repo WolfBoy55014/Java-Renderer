@@ -19,12 +19,22 @@ public class SolidMaterial implements Material {
         this.metalic = metallic;
     }
 
+    public SolidMaterial(double[] albedo, double metallic, double roughness) {
+        this.albedo = albedo;
+        this.metalic = metallic;
+        this.roughness = roughness;
+    }
+
     public SolidMaterial(Color albedo) {
         this(new double[]{albedo.getRed() / 255.0d, albedo.getGreen() / 255.0d, albedo.getBlue() / 255.0d});
     }
 
     public SolidMaterial(Color albedo, double metalic) {
         this(new double[]{albedo.getRed() / 255.0d, albedo.getGreen() / 255.0d, albedo.getBlue() / 255.0d}, metalic);
+    }
+
+    public SolidMaterial(Color albedo, double metalic, double roughness) {
+        this(new double[]{albedo.getRed() / 255.0d, albedo.getGreen() / 255.0d, albedo.getBlue() / 255.0d}, metalic, roughness);
     }
 
     @Override
@@ -44,7 +54,7 @@ public class SolidMaterial implements Material {
 
     @Override
     public double getRoughness(double[] p, double[] uv) {
-        return 0.0d;
+        return this.roughness;
     }
 
     @Override

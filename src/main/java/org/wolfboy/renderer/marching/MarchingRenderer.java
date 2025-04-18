@@ -99,23 +99,39 @@ public class MarchingRenderer extends Renderer {
         ray = this.march(ray, MAX_DISTANCE);
 
         if (ray.getDistance() >= MAX_DISTANCE) {
-            // Get skybox color
-            // Convert to spherical coords
-            double[] p = ray.getDirection();
-            double x = 0.5 + (Math.atan2(p[1], p[0]) / (2 * Math.PI));
-            double y = 0.5 + (Math.asin(p[2] / LinearAlgebra.magnitude(p)) / Math.PI);
+            if (useSkybox) {
+                // Get skybox color
+                // Convert to spherical coords
+                double[] p = ray.getDirection();
+                double x = 0.5 + (Math.atan2(p[1], p[0]) / (2 * Math.PI));
+                double y = 0.5 + (Math.asin(p[2] / LinearAlgebra.magnitude(p)) / Math.PI);
 
-            int skyColor = this.skybox.getRGB((int) (x * this.skybox.getWidth()), (int) (this.skybox.getHeight() - (y * this.skybox.getHeight())));
-            return new double[]{((skyColor & 0x00ff0000) >> 16) / 255.0d, ((skyColor & 0x0000ff00) >> 8) / 255.0d, (skyColor & 0x000000ff) / 255.0d};
+                int skyColor = this.skybox.getRGB((int) (x * this.skybox.getWidth()), (int) (this.skybox.getHeight() - (y * this.skybox.getHeight())));
+                return new double[]{((skyColor & 0x00ff0000) >> 16) / 255.0d, ((skyColor & 0x0000ff00) >> 8) / 255.0d, (skyColor & 0x000000ff) / 255.0d};
+            }
+            return color;
         }
 
         double[] p = ray.getPosition();
-        double[] n = this.scene.getNormal(p);
         MarchingObject nearestObject = this.scene.getNearestObject(p);
+        double[] n = this.scene.getNormal(p);
         double[] uv = nearestObject.getUV(p, n);
-        double[] albedo = LinearAlgebra.div(nearestObject.getMaterial().getAlbedo(p, uv), Math.PI);
-        double metallic = this.scene.getNearestObject(p).getMaterial().getMetalic(p, uv);
+
+        // roughness
+        n = LinearAlgebra.cartesianToSpherical(n);
+        n[1] += Math.TAU * (((Math.random() * 2.0d) - 1.0d) * nearestObject.getMaterial().getRoughness(n, uv));
+        // n[1] = Math.max(Math.min(n[1], Math.PI), -Math.PI);
+        n[0] += Math.PI * (((Math.random() * 2.0d) - 1.0d)  * nearestObject.getMaterial().getRoughness(n, uv));
+        // n[0] = Math.max(Math.min(n[1], Math.PI / 2.0d), -Math.PI / 2.0d);
+        n = LinearAlgebra.normalize(LinearAlgebra.sphericalToCartesian(n));
+
         double[] illumination = new double[]{0.0d, 0.0d, 0.0d};
+
+        double metallic = this.scene.getNearestObject(p).getMaterial().getMetalic(p, uv);
+
+        double[] albedo = LinearAlgebra.div(nearestObject.getMaterial().getAlbedo(p, uv), Math.PI);
+        double[] diffuseColor = new double[]{1.0d, 1.0d, 1.0d};
+        double[] reflectedColor = new double[]{1.0d, 1.0d, 1.0d};
 
         // Calculate illumination per light
         for (MarchingLight light : this.scene.getLights()) {
@@ -142,19 +158,17 @@ public class MarchingRenderer extends Renderer {
             double[] mul = LinearAlgebra.mul(n, this.MIN_DISTANCE * 4.0d);
             Ray reflectionRay = new Ray(ray.getDirection(), LinearAlgebra.add(ray.getPosition(), mul));
             reflectionRay.reflect(n);
-            if (reflectionRecursions < 4) {
-                color = this.renderWithRay(reflectionRay, color);
+            if (reflectionRecursions < 16) {
+                reflectedColor = this.renderWithRay(reflectionRay, color);
             }
-        } else {
-            // TODO: Mix reflection and albedo
-            color[0] = albedo[0] * illumination[0];
-            color[1] = albedo[1] * illumination[1];
-            color[2] = albedo[2] * illumination[2];
         }
+
+        diffuseColor = LinearAlgebra.mul(albedo, illumination);
+        color = LinearAlgebra.mix(diffuseColor, reflectedColor, metallic);
 
         // color = LinearAlgebra.add(color, new double[]{uv[0], uv[1], 0.0d});
         // color = LinearAlgebra.add(LinearAlgebra.div(LinearAlgebra.add(n, 1.0d), 2.0d), color);
-        // bgColor = LinearAlgebra.abs(n);
+        // color = LinearAlgebra.abs(n);
         // color = LinearAlgebra.div(new double[]{ray.getSteps(), ray.getSteps(), ray.getSteps()}, 300.0d);
         // color = new double[]{this.reflectionRecursions / 4.0d, this.reflectionRecursions / 4.0d, this.reflectionRecursions / 4.0d};
         return color;

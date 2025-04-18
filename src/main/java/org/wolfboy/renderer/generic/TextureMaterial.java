@@ -22,6 +22,19 @@ public class TextureMaterial implements Material {
     private BufferedImage transmission;
     private boolean interpolate = false;
 
+    public TextureMaterial(double scale, File albedo, File normal, File metallic, File roughness) {
+        this.scale = scale;
+
+        try {
+            this.albedo = ImageIO.read(albedo);
+            this.normal = ImageIO.read(normal);
+            this.metalic = ImageIO.read(metallic);
+            this.roughness = ImageIO.read(roughness);
+        } catch (IOException e) {
+            System.err.println("Error opening image: " + e.getMessage());
+        }
+    }
+
     public TextureMaterial(double scale, File albedo, File normal, File displacement) {
         this.scale = scale;
 

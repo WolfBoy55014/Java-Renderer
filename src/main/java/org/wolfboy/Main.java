@@ -31,11 +31,11 @@ public class Main {
         final int width = 1920;
         final int height = 1080;
         final boolean save = false;
-        final int SPP = 1;
-        final int tileSize = 16;
+        final int SPP = 4;
+        final int tileSize = 2;
 
         UI ui = new UI(width, height);
-        MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.02d);
+        MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.0d);
         camera.setRotation(-0.5d, 0.0d, 0.2d);
         camera.setPosition(-1.0d, -7.0d, 3.0d);
 
@@ -66,8 +66,8 @@ public class Main {
         objects[5] = new Torus(new TextureMaterial(1.0d, uv), new double[]{0.0d, 0.0d, 0.0d}, 0.5d, 1.0d);
         objects[4] = new Plane(new TextureMaterial(1.0d, check), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
         objects[3] = new Sphere(new TextureMaterial(1.0d, uv), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[2] = new Sphere(new SolidMaterial(new Color(255, 255, 255), 1.0d), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[1] = new Sphere(new SolidMaterial(new Color(255, 255, 255), 1.0d), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[2] = new Sphere(new SolidMaterial(new Color(255, 209, 65), 0.5d), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
+        objects[1] = new Sphere(new SolidMaterial(new Color(80, 219, 160), 1.0d, 0.1d), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
         objects[0] = new Sphere(new TextureMaterial(1.0d, uv), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
         // objects[0] = new Fractal(new Material(new Color(121, 225, 194)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{0.0d, 0.0d, 0.0d}, new double[]{1.0d, 1.0d, 1.0d});
 
