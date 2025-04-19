@@ -28,14 +28,14 @@ public class Main {
         // 480p (854 * 480)
         // 360p (640 * 360)
 
-        final int width = 1280;
-        final int height = 720;
-        final boolean save = false;
-        final int SPP = 1;
+        final int width = 1920;
+        final int height = 1080;
+        final boolean save = true;
+        final int SPP = 128;
         final int tileSize = 2;
 
         UI ui = new UI(width, height);
-        MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.0d);
+        MarchingCamera camera = new MarchingCamera(width, height, 1.2d, 6.75, 0.07d);
         camera.setRotation(-0.5d, 0.0d, 0.2d);
         camera.setPosition(-1.0d, -7.0d, 3.0d);
 
@@ -92,7 +92,7 @@ public class Main {
             tasks[u] = new RenderTask(u, tileSize, renderer, ui);
         }
 
-        ExecutorService pool = Executors.newFixedThreadPool(8);
+        ExecutorService pool = Executors.newFixedThreadPool(12);
         long startTime = System.nanoTime();
 
         for (int u = 0; u < numTiles; u++) {
