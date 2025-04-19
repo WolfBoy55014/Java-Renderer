@@ -28,10 +28,10 @@ public class Main {
         // 480p (854 * 480)
         // 360p (640 * 360)
 
-        final int width = 1920;
-        final int height = 1080;
+        final int width = 1280;
+        final int height = 720;
         final boolean save = false;
-        final int SPP = 4;
+        final int SPP = 1;
         final int tileSize = 2;
 
         UI ui = new UI(width, height);
@@ -39,19 +39,25 @@ public class Main {
         camera.setRotation(-0.5d, 0.0d, 0.2d);
         camera.setPosition(-1.0d, -7.0d, 3.0d);
 
-        File skybox = new File("kloofendal_48d_partly_cloudy_puresky_2k.jpg");
-        File check = new File("check.png");
-        File uv = new File("uv.png");
-        File tile = new File("glossy-marble-tile_albedo.png");
-        File tileNormal = new File("glossy-marble-tile_normal-ogl.png");
-        File wood = new File("older-wood-flooring_albedo.png");
-        File woodNormal = new File("older-wood-flooring_normal-ogl.png");
-        File mortar = new File("sloppy-mortar-stone-wall_albedo.png");
-        File mortarNormal = new File("sloppy-mortar-stone-wall_normal-ogl.png");
-        File space = new File("filthy-space-panels_albedo.png");
-        File spaceNormal = new File("filthy-space-panels_normal-ogl.png");
-        File siding = new File("stone-house-siding_albedo.png");
-        File sidingNormal = new File("stone-house-siding_normal-ogl.png");
+        File skybox = new File("materials/kloofendal_48d_partly_cloudy_puresky_2k.jpg");
+        File check = new File("materials/check.png");
+        File uv = new File("materials/uv.png");
+        File tile = new File("materials/glossy-marble-tile_albedo.png");
+        File tileNormal = new File("materials/glossy-marble-tile_normal-ogl.png");
+        File wood = new File("materials/older-wood-flooring_albedo.png");
+        File woodNormal = new File("materials/older-wood-flooring_normal-ogl.png");
+        File mortar = new File("materials/sloppy-mortar-stone-wall_albedo.png");
+        File mortarNormal = new File("materials/sloppy-mortar-stone-wall_normal-ogl.png");
+        File space = new File("materials/filthy-space-panels_albedo.png");
+        File spaceNormal = new File("materials/filthy-space-panels_normal-ogl.png");
+        File spaceMetallic = new File("materials/filthy-space-panels_metallic.png");
+        File spaceRoughness = new File("materials/filthy-space-panels_roughness.png");
+        File siding = new File("materials/stone-house-siding_albedo.png");
+        File sidingNormal = new File("materials/stone-house-siding_normal-ogl.png");
+        File steel = new File("materials/used-stainless-steel_albedo.png");
+        File steelNormal = new File("materials/used-stainless-steel_normal-ogl.png");
+        File steelMetallic = new File("materials/used-stainless-steel_metallic.png");
+        File steelRoughness = new File("materials/used-stainless-steel_roughness.png");
 
         MarchingLight[] lights = new MarchingLight[3];
         // lights[2] = new PointLight(new double[]{0.0d, 0.0d, 5.0d}, new Color(255, 255, 255), 2000);
@@ -67,8 +73,8 @@ public class Main {
         objects[4] = new Plane(new TextureMaterial(1.0d, check), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
         objects[3] = new Sphere(new TextureMaterial(1.0d, uv), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
         objects[2] = new Sphere(new SolidMaterial(new Color(255, 209, 65), 0.5d), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[1] = new Sphere(new SolidMaterial(new Color(80, 219, 160), 1.0d, 0.1d), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
-        objects[0] = new Sphere(new TextureMaterial(1.0d, uv), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[1] = new Sphere(new TextureMaterial(1.0d, steel, steelNormal, steelMetallic, steelRoughness), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[0] = new Sphere(new TextureMaterial(1.0d, space, spaceNormal, spaceMetallic, spaceRoughness), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
         // objects[0] = new Fractal(new Material(new Color(121, 225, 194)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{0.0d, 0.0d, 0.0d}, new double[]{1.0d, 1.0d, 1.0d});
 
         MarchingScene scene = new MarchingScene(objects, lights);
@@ -115,10 +121,10 @@ public class Main {
 
 
         if (save) {
-            File file = new File("render.png");
+            File file = new File("renders/render.png");
 
             for (int r = 1; file.exists(); r++) {
-                file = new File(String.format("render_%d.png", r));
+                file = new File(String.format("renders/render_%d.png", r));
             }
 
             ui.saveRender(file.getName());

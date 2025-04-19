@@ -90,13 +90,18 @@ public class TextureMaterial implements Material {
             return 0.0d;
         }
 
-        double[] h = this.getColorAtUV(this.normal, uv);
+        double[] h = this.getColorAtUV(this.displacement, uv);
         return h[0];
     }
 
     @Override
     public double getRoughness(double[] p, double[] uv) {
-        return 0;
+        if (this.roughness == null) {
+            return 0.0d;
+        }
+
+        double[] r = this.getColorAtUV(this.roughness, uv);
+        return r[0];
     }
 
     @Override
@@ -106,7 +111,12 @@ public class TextureMaterial implements Material {
 
     @Override
     public double getMetalic(double[] p, double[] uv) {
-        return 0;
+        if (this.metalic == null) {
+            return 0.0d;
+        }
+
+        double[] m = this.getColorAtUV(this.metalic, uv);
+        return m[0];
     }
 
     @Override

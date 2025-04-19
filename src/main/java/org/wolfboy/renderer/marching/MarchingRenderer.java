@@ -119,9 +119,9 @@ public class MarchingRenderer extends Renderer {
 
         // roughness
         n = LinearAlgebra.cartesianToSpherical(n);
-        n[1] += Math.TAU * (((Math.random() * 2.0d) - 1.0d) * nearestObject.getMaterial().getRoughness(n, uv));
+        n[1] += Math.PI * (((Math.random() * 2.0d) - 1.0d) * nearestObject.getMaterial().getRoughness(n, uv));
         // n[1] = Math.max(Math.min(n[1], Math.PI), -Math.PI);
-        n[0] += Math.PI * (((Math.random() * 2.0d) - 1.0d)  * nearestObject.getMaterial().getRoughness(n, uv));
+        n[0] += (Math.PI / 2.0d) * (((Math.random() * 2.0d) - 1.0d)  * nearestObject.getMaterial().getRoughness(n, uv));
         // n[0] = Math.max(Math.min(n[1], Math.PI / 2.0d), -Math.PI / 2.0d);
         n = LinearAlgebra.normalize(LinearAlgebra.sphericalToCartesian(n));
 
@@ -159,7 +159,7 @@ public class MarchingRenderer extends Renderer {
             Ray reflectionRay = new Ray(ray.getDirection(), LinearAlgebra.add(ray.getPosition(), mul));
             reflectionRay.reflect(n);
             if (reflectionRecursions < 16) {
-                reflectedColor = this.renderWithRay(reflectionRay, color);
+                reflectedColor = LinearAlgebra.mul(this.renderWithRay(reflectionRay, color), LinearAlgebra.normalize(albedo));
             }
         }
 
