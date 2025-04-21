@@ -25,6 +25,13 @@ public class SolidMaterial implements Material {
         this.roughness = roughness;
     }
 
+    public SolidMaterial(double[] albedo, double metallic, double roughness, double specular) {
+        this.albedo = albedo;
+        this.metalic = metallic;
+        this.roughness = roughness;
+        this.specular = specular;
+    }
+
     public SolidMaterial(Color albedo) {
         this(new double[]{albedo.getRed() / 255.0d, albedo.getGreen() / 255.0d, albedo.getBlue() / 255.0d});
     }
@@ -35,6 +42,10 @@ public class SolidMaterial implements Material {
 
     public SolidMaterial(Color albedo, double metalic, double roughness) {
         this(new double[]{albedo.getRed() / 255.0d, albedo.getGreen() / 255.0d, albedo.getBlue() / 255.0d}, metalic, roughness);
+    }
+
+    public SolidMaterial(Color albedo, double metalic, double roughness, double specular) {
+        this(new double[]{albedo.getRed() / 255.0d, albedo.getGreen() / 255.0d, albedo.getBlue() / 255.0d}, metalic, roughness, specular);
     }
 
     @Override
@@ -59,7 +70,7 @@ public class SolidMaterial implements Material {
 
     @Override
     public double getSpecular(double[] p, double[] uv) {
-        return 0.0d;
+        return this.specular;
     }
 
     @Override

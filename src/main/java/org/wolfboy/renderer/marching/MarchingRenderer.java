@@ -117,21 +117,26 @@ public class MarchingRenderer extends Renderer {
         double[] n = this.scene.getNormal(p);
         double[] uv = nearestObject.getUV(p, n);
 
-        // roughness
-        n = LinearAlgebra.cartesianToSpherical(n);
-        n[1] += Math.PI * (((Math.random() * 2.0d) - 1.0d) * nearestObject.getMaterial().getRoughness(n, uv));
-        // n[1] = Math.max(Math.min(n[1], Math.PI), -Math.PI);
-        n[0] += (Math.PI / 2.0d) * (((Math.random() * 2.0d) - 1.0d)  * nearestObject.getMaterial().getRoughness(n, uv));
-        // n[0] = Math.max(Math.min(n[1], Math.PI / 2.0d), -Math.PI / 2.0d);
-        n = LinearAlgebra.normalize(LinearAlgebra.sphericalToCartesian(n));
-
-        double[] illumination = new double[]{0.0d, 0.0d, 0.0d};
-
         double metallic = this.scene.getNearestObject(p).getMaterial().getMetalic(p, uv);
+        double specular = this.scene.getNearestObject(p).getMaterial().getSpecular(p, uv);
 
         double[] albedo = LinearAlgebra.div(nearestObject.getMaterial().getAlbedo(p, uv), Math.PI);
         double[] diffuseColor = new double[]{1.0d, 1.0d, 1.0d};
         double[] reflectedColor = new double[]{1.0d, 1.0d, 1.0d};
+        double[] lighting = new double[]{0.0d, 0.0d, 0.0d};
+        double[] specularLighting = new double[3];
+
+
+        // roughness
+        // TODO: Include metallic, too
+        if ((specular > 0.0d) | (metallic > 0.0d)) {
+
+            double[] nSphere = LinearAlgebra.cartesianToSpherical(n);
+            nSphere[1] += Math.PI * (((Math.random() * 2.0d) - 1.0d) * nearestObject.getMaterial().getRoughness(n, uv));
+            nSphere[0] += (Math.PI / 2.0d) * (Math.random() * nearestObject.getMaterial().getRoughness(n, uv));
+            n = LinearAlgebra.sphericalToCartesian(nSphere);
+            n = LinearAlgebra.normalize(n);
+        }
 
         // Calculate illumination per light
         for (MarchingLight light : this.scene.getLights()) {
@@ -148,7 +153,17 @@ public class MarchingRenderer extends Renderer {
 
             shadowRay = this.march(shadowRay, light_dist);
             if (shadowRay.getDistance() >= light_dist) {
-                illumination = LinearAlgebra.add(illumination, LinearAlgebra.mul(light.getColor(), Math.max(LinearAlgebra.dot(n, light_dir), 0.0d) * light.getIntensity(p)));
+
+                // Calculate specular reflections
+                if (metallic > 0.0d | specular > 0.0d) {
+                    Ray specularRay = new Ray(light_dir, ray.getPosition());
+                    specularRay.reflect(n);
+                    specularLighting = LinearAlgebra.mul(light.getColor(), Math.pow(LinearAlgebra.dot(specularRay.getDirection(), ray.getDirection()), 1000) * light.getIntensity(p));
+                }
+
+                double diffuse = Math.max(LinearAlgebra.dot(n, light_dir), 0.0d) * light.getIntensity(p);
+                double factor = Math.max(specular, metallic);
+                lighting = LinearAlgebra.add(lighting, LinearAlgebra.add(LinearAlgebra.mul(light.getColor(), diffuse * (1.0d - factor)), LinearAlgebra.mul(specularLighting, factor)));
                 // illumination = new double[]{shadowRay.getSteps(), shadowRay.getSteps(), shadowRay.getSteps()}; // Debug to see lighting calculation cost
             }
         }
@@ -159,11 +174,11 @@ public class MarchingRenderer extends Renderer {
             Ray reflectionRay = new Ray(ray.getDirection(), LinearAlgebra.add(ray.getPosition(), mul));
             reflectionRay.reflect(n);
             if (reflectionRecursions < 16) {
-                reflectedColor = LinearAlgebra.mul(this.renderWithRay(reflectionRay, color), LinearAlgebra.normalize(albedo));
+                reflectedColor = LinearAlgebra.mul(LinearAlgebra.add(this.renderWithRay(reflectionRay, color), specularLighting), LinearAlgebra.normalize(albedo));
             }
         }
 
-        diffuseColor = LinearAlgebra.mul(albedo, illumination);
+        diffuseColor = LinearAlgebra.mul(albedo, lighting);
         color = LinearAlgebra.mix(diffuseColor, reflectedColor, metallic);
 
         // color = LinearAlgebra.add(color, new double[]{uv[0], uv[1], 0.0d});
