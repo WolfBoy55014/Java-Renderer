@@ -17,20 +17,17 @@ public class MarchingRenderer extends Renderer {
 
     private final double MAX_DISTANCE;
     private final double MIN_DISTANCE;
-    private int SPP;
-    private int reflectionRecursions = 0;
     private BufferedImage skybox;
     private boolean useSkybox = false;
 
     private final MarchingScene scene;
 
-    public MarchingRenderer(MarchingScene scene, MarchingCamera camera, int SPP) {
+    public MarchingRenderer(MarchingScene scene, MarchingCamera camera) {
         super(scene, camera);
         this.scene = scene;
 
         MAX_DISTANCE = 100.0d;
         MIN_DISTANCE = 0.0001d;
-        this.SPP = SPP;
     }
 
     public void addSkybox(File image) {
@@ -60,17 +57,11 @@ public class MarchingRenderer extends Renderer {
 
     public Color renderPixel(int x, int y) {
         double[] bgColor = new double[]{0.0d, 0.0d, 0.0d};
-        double[] color = new double[]{0.0d, 0.0d, 0.0d};
+        double[] color;
 
-        for (int s = 0; s < SPP; s++) {
-            this.reflectionRecursions = 0;
-            Ray ray = this.camera.getRayAtPixel(x, y); // Must be sampled each sample for proper DoF blur
-            color = LinearAlgebra.add(color, this.renderWithRay(ray, bgColor));
-        }
+        Ray ray = this.camera.getRayAtPixel(x, y); // Must be sampled each sample for proper DoF blur
+        color = this.renderWithRay(ray, bgColor, 0);
 
-        color[0] /= SPP;
-        color[1] /= SPP;
-        color[2] /= SPP;
         color = LinearAlgebra.mul(color, 255.0d);
 
         // color = new Color((int) Math.max(this.camera.getDirectionAtPixel(x, y)[0] * 255, 0),
@@ -93,8 +84,7 @@ public class MarchingRenderer extends Renderer {
         return new Color(Math.min((int) (color[0]), 255), Math.min((int) (color[1]), 255), Math.min((int) (color[2]), 255));
     }
 
-    private double[] renderWithRay(Ray inputRay, double[] color) {
-        this.reflectionRecursions++;
+    private double[] renderWithRay(Ray inputRay, double[] color, int bounce) {
         Ray ray = new Ray(inputRay.getDirection(), inputRay.getPosition());
         ray = this.march(ray, MAX_DISTANCE);
 
@@ -119,22 +109,20 @@ public class MarchingRenderer extends Renderer {
 
         double metallic = this.scene.getNearestObject(p).getMaterial().getMetalic(p, uv);
         double specular = this.scene.getNearestObject(p).getMaterial().getSpecular(p, uv);
+        double roughness = this.scene.getNearestObject(p).getMaterial().getRoughness(p, uv);
 
-        double[] albedo = LinearAlgebra.div(nearestObject.getMaterial().getAlbedo(p, uv), Math.PI);
-        double[] diffuseColor = new double[]{1.0d, 1.0d, 1.0d};
-        double[] reflectedColor = new double[]{1.0d, 1.0d, 1.0d};
-        double[] lighting = new double[]{0.0d, 0.0d, 0.0d};
-        double[] specularLighting = new double[3];
+        double[] albedo = nearestObject.getMaterial().getAlbedo(p, uv);
+        double[] diffuseColor = new double[3];
+        double[] reflectedColor = new double[3];
+        double[] specularColor = new double[3];
+        double[] lightIntensity = new double[3];
 
-
-        // roughness
-        // TODO: Include metallic, too
         if ((specular > 0.0d) | (metallic > 0.0d)) {
-
-            double[] nSphere = LinearAlgebra.cartesianToSpherical(n);
-            nSphere[1] += Math.PI * (((Math.random() * 2.0d) - 1.0d) * nearestObject.getMaterial().getRoughness(n, uv));
-            nSphere[0] += (Math.PI / 2.0d) * (Math.random() * nearestObject.getMaterial().getRoughness(n, uv));
-            n = LinearAlgebra.sphericalToCartesian(nSphere);
+            double[] r = new double[3];
+            r[0] = n[0] + (((Math.random() * 2.0d) - 1.0d));
+            r[1] = n[1] + (((Math.random() * 2.0d) - 1.0d));
+            r[2] = n[2] + (((Math.random() * 2.0d) - 1.0d));
+            n = LinearAlgebra.mix(n, r, roughness);
             n = LinearAlgebra.normalize(n);
         }
 
@@ -153,18 +141,17 @@ public class MarchingRenderer extends Renderer {
 
             shadowRay = this.march(shadowRay, light_dist);
             if (shadowRay.getDistance() >= light_dist) {
+                double diffuse = Math.max(LinearAlgebra.dot(n, light_dir), 0.0d);
+                lightIntensity = LinearAlgebra.mul(light.getColor(), light.getIntensity(p));
 
-                // Calculate specular reflections
-                if (metallic > 0.0d | specular > 0.0d) {
-                    Ray specularRay = new Ray(light_dir, ray.getPosition());
-                    specularRay.reflect(n);
-                    specularLighting = LinearAlgebra.mul(light.getColor(), Math.pow(LinearAlgebra.dot(specularRay.getDirection(), ray.getDirection()), 1000) * light.getIntensity(p));
-                }
+                diffuseColor = LinearAlgebra.add(diffuseColor, LinearAlgebra.mul(LinearAlgebra.mul(lightIntensity, diffuse), LinearAlgebra.div(albedo, Math.PI)));
+            }
 
-                double diffuse = Math.max(LinearAlgebra.dot(n, light_dir), 0.0d) * light.getIntensity(p);
-                double factor = Math.max(specular, metallic);
-                lighting = LinearAlgebra.add(lighting, LinearAlgebra.add(LinearAlgebra.mul(light.getColor(), diffuse * (1.0d - factor)), LinearAlgebra.mul(specularLighting, factor)));
-                // illumination = new double[]{shadowRay.getSteps(), shadowRay.getSteps(), shadowRay.getSteps()}; // Debug to see lighting calculation cost
+            // Calculate specular reflections
+            if (metallic > 0.0d | specular > 0.0d) {
+                Ray specularRay = new Ray(light_dir, ray.getPosition());
+                specularRay.reflect(n);
+                specularColor = LinearAlgebra.mul(light.getColor(), Math.pow(Math.max(LinearAlgebra.dot(ray.getDirection(), specularRay.getDirection()), 0.0d), 800.0d));
             }
         }
 
@@ -173,19 +160,22 @@ public class MarchingRenderer extends Renderer {
             double[] mul = LinearAlgebra.mul(n, this.MIN_DISTANCE * 4.0d);
             Ray reflectionRay = new Ray(ray.getDirection(), LinearAlgebra.add(ray.getPosition(), mul));
             reflectionRay.reflect(n);
-            if (reflectionRecursions < 16) {
-                reflectedColor = LinearAlgebra.mul(LinearAlgebra.add(this.renderWithRay(reflectionRay, color), specularLighting), LinearAlgebra.normalize(albedo));
+            if (bounce < 16) {
+                bounce++;
+                reflectedColor = LinearAlgebra.mul(LinearAlgebra.add(this.renderWithRay(reflectionRay, color, bounce), specularColor), albedo);
             }
         }
 
-        diffuseColor = LinearAlgebra.mul(albedo, lighting);
+        diffuseColor = LinearAlgebra.add(diffuseColor, specularColor);
         color = LinearAlgebra.mix(diffuseColor, reflectedColor, metallic);
+        // color = LinearAlgebra.add(diffuseColor, LinearAlgebra.mul(specularColor, 10.0d));
+        // color = LinearAlgebra.mul(specularColor, 10.0d);
 
         // color = LinearAlgebra.add(color, new double[]{uv[0], uv[1], 0.0d});
         // color = LinearAlgebra.add(LinearAlgebra.div(LinearAlgebra.add(n, 1.0d), 2.0d), color);
         // color = LinearAlgebra.abs(n);
         // color = LinearAlgebra.div(new double[]{ray.getSteps(), ray.getSteps(), ray.getSteps()}, 300.0d);
-        // color = new double[]{this.reflectionRecursions / 4.0d, this.reflectionRecursions / 4.0d, this.reflectionRecursions / 4.0d};
+        // color = new double[]{bounce / 4.0d, bounce / 4.0d, bounce / 4.0d};
         return color;
     }
 }

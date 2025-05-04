@@ -13,7 +13,7 @@ public class UI {
 
     RenderPanel renderPanel;
     Container pane;
-    BufferedImage img;
+    ExtendedImage img;
     JFrame frame;
 
     public UI(int width, int height) {
@@ -22,7 +22,7 @@ public class UI {
         this.pane = frame.getContentPane();
         this.pane.setLayout(new BorderLayout());
 
-        this.img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        this.img = new ExtendedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         this.renderPanel = new RenderPanel();
         this.renderPanel.updateImage(this.img);
@@ -36,8 +36,16 @@ public class UI {
         this.frame.setSize(width + insets.left + insets.right, height + insets.top + insets.bottom);
     }
 
+    public ExtendedImage getImage() {
+        return this.img;
+    }
+
     public void drawPixel(int x, int y, Color color) {
-        img.setRGB(x, y, color.getRGB());
+        this.img.setColor(x, y, color);
+    }
+
+    public Color getPixel(int x, int y) {
+        return this.img.getColor(x, y);
     }
 
     public void display() {
