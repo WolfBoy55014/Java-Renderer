@@ -31,12 +31,12 @@ public class Main {
         // 480p (854 * 480)
         // 360p (640 * 360)
 
-        final int width = 1920;
-        final int height = 1080;
+        final int width = 3840;
+        final int height = 2160;
         final boolean save = false;
         final int SPP = 8;
         final double NOISE_THREASHOLD = 0.1;
-        final int NUM_THREADS = 6;
+        final int NUM_THREADS = 8;
 
         UI ui = new UI(width, height);
         ExtendedImage noiseMap = new ExtendedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -78,7 +78,7 @@ public class Main {
         objects[4] = new Plane(new TextureMaterial(1.0d, check), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
         objects[3] = new Sphere(new TextureMaterial(1.0d, uv), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
         objects[2] = new Sphere(new SolidMaterial(new Color(255, 236, 173), 0.0d, 0.05d, 0.9d), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[1] = new Sphere(new SolidMaterial(new Color(255, 255, 255), 0.99d, 0.01d, 0.0d), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[1] = new Sphere(new SolidMaterial(new Color(255, 255, 255), 0.99d, 0.1d, 0.0d), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
         objects[0] = new Sphere(new TextureMaterial(1.0d, space, spaceNormal, spaceMetallic, spaceRoughness), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
         // objects[0] = new Fractal(new Material(new Color(121, 225, 194)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{0.0d, 0.0d, 0.0d}, new double[]{1.0d, 1.0d, 1.0d});
 

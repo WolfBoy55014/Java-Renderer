@@ -104,7 +104,9 @@ public class MarchingRenderer extends Renderer {
 
         double[] p = ray.getPosition();
         MarchingObject nearestObject = this.scene.getNearestObject(p);
-        double[] n = this.scene.getNormal(p);
+        double[] n = nearestObject.getNormal(p);
+        double[] bn = nearestObject.getBinormal(p);
+        double[] t = nearestObject.getTangent(p);
         double[] uv = nearestObject.getUV(p, n);
 
         double metallic = this.scene.getNearestObject(p).getMaterial().getMetalic(p, uv);
@@ -118,11 +120,8 @@ public class MarchingRenderer extends Renderer {
         double[] lightIntensity = new double[3];
 
         if ((specular > 0.0d) | (metallic > 0.0d)) {
-            double[] r = new double[3];
-            r[0] = n[0] + (((Math.random() * 2.0d) - 1.0d));
-            r[1] = n[1] + (((Math.random() * 2.0d) - 1.0d));
-            r[2] = n[2] + (((Math.random() * 2.0d) - 1.0d));
-            n = LinearAlgebra.mix(n, r, roughness);
+            n = LinearAlgebra.mix(n, bn, Math.random() * roughness);
+            n = LinearAlgebra.mix(n, t, Math.random() * roughness);
             n = LinearAlgebra.normalize(n);
         }
 
