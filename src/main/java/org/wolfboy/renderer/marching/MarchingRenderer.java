@@ -55,7 +55,7 @@ public class MarchingRenderer extends Renderer {
         return ray;
     }
 
-    public Color renderPixel(int x, int y) {
+    public double[] renderPixel(int x, int y) {
         double[] bgColor = new double[]{0.0d, 0.0d, 0.0d};
         double[] color;
 
@@ -81,7 +81,7 @@ public class MarchingRenderer extends Renderer {
         // }
 
         // return new Color(((int) (color[0])), ((int) (color[1])), ((int) (color[2])));
-        return new Color(Math.min((int) (color[0]), 255), Math.min((int) (color[1]), 255), Math.min((int) (color[2]), 255));
+        return color;
     }
 
     private double[] renderWithRay(Ray inputRay, double[] color, int bounce) {
@@ -120,8 +120,11 @@ public class MarchingRenderer extends Renderer {
         double[] lightIntensity = new double[3];
 
         if ((specular > 0.0d) | (metallic > 0.0d)) {
-            n = LinearAlgebra.mix(n, bn, Math.random() * roughness);
-            n = LinearAlgebra.mix(n, t, Math.random() * roughness);
+            double[] r = new double[3];
+            r[0] = Math.random() * (Math.PI / 2.0d) * roughness;
+            r[1] = Math.random() * (Math.PI * 2.0d) * roughness;
+            n = LinearAlgebra.add(LinearAlgebra.cartesianToSpherical(n), r);
+            n = LinearAlgebra.sphericalToCartesian(n);
             n = LinearAlgebra.normalize(n);
         }
 
@@ -161,7 +164,7 @@ public class MarchingRenderer extends Renderer {
             reflectionRay.reflect(n);
             if (bounce < 16) {
                 bounce++;
-                reflectedColor = LinearAlgebra.mul(LinearAlgebra.add(this.renderWithRay(reflectionRay, color, bounce), specularColor), albedo);
+                reflectedColor = LinearAlgebra.mul(LinearAlgebra.add(this.renderWithRay(reflectionRay, color, bounce), specularColor), LinearAlgebra.normalize(albedo));
             }
         }
 
@@ -171,10 +174,10 @@ public class MarchingRenderer extends Renderer {
         // color = LinearAlgebra.mul(specularColor, 10.0d);
 
         // color = LinearAlgebra.add(color, new double[]{uv[0], uv[1], 0.0d});
-        // color = LinearAlgebra.add(LinearAlgebra.div(LinearAlgebra.add(n, 1.0d), 2.0d), color);
+        // color = LinearAlgebra.div(LinearAlgebra.add(n, 1.0d), 2.0d);
         // color = LinearAlgebra.abs(n);
         // color = LinearAlgebra.div(new double[]{ray.getSteps(), ray.getSteps(), ray.getSteps()}, 300.0d);
-        // color = new double[]{bounce / 4.0d, bounce / 4.0d, bounce / 4.0d};
+        // color = new double[]{bounce, bounce, bounce};
         return color;
     }
 }

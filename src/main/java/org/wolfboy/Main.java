@@ -31,11 +31,10 @@ public class Main {
         // 480p (854 * 480)
         // 360p (640 * 360)
 
-        final int width = 3840;
-        final int height = 2160;
+        final int width = 1920;
+        final int height = 1080;
         final boolean save = false;
-        final int SPP = 8;
-        final double NOISE_THREASHOLD = 0.1;
+        final int SPP = 32;
         final int NUM_THREADS = 8;
 
         UI ui = new UI(width, height);
@@ -63,6 +62,10 @@ public class Main {
         File steelNormal = new File("materials/used-stainless-steel_normal-ogl.png");
         File steelMetallic = new File("materials/used-stainless-steel_metallic.png");
         File steelRoughness = new File("materials/used-stainless-steel_roughness.png");
+        File metal = new File("materials/beaten-up-metal1-albedo.png");
+        File metalNormal = new File("materials/beaten-up-metal1-Normal-ogl.png");
+        File metalMetallic = new File("materials/beaten-up-metal1-Metallic.png");
+        File metalRoughness = new File("materials/beaten-up-metal1-Roughness.png");
 
         MarchingLight[] lights = new MarchingLight[3];
         // lights[2] = new PointLight(new double[]{0.0d, 0.0d, 5.0d}, new Color(255, 255, 255), 2000);
@@ -78,8 +81,8 @@ public class Main {
         objects[4] = new Plane(new TextureMaterial(1.0d, check), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
         objects[3] = new Sphere(new TextureMaterial(1.0d, uv), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
         objects[2] = new Sphere(new SolidMaterial(new Color(255, 236, 173), 0.0d, 0.05d, 0.9d), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[1] = new Sphere(new SolidMaterial(new Color(255, 255, 255), 0.99d, 0.1d, 0.0d), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
-        objects[0] = new Sphere(new TextureMaterial(1.0d, space, spaceNormal, spaceMetallic, spaceRoughness), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[1] = new Sphere(new TextureMaterial(1.0d, metal, metalNormal, metalMetallic, metalRoughness), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[0] = new Sphere(new TextureMaterial(1.0d, steel, steelNormal, steelMetallic, steelRoughness), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
         // objects[0] = new Fractal(new Material(new Color(121, 225, 194)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{0.0d, 0.0d, 0.0d}, new double[]{1.0d, 1.0d, 1.0d});
 
         MarchingScene scene = new MarchingScene(objects, lights);
@@ -88,54 +91,29 @@ public class Main {
         renderer.addSkybox(skybox);
 
         long startTime = System.nanoTime();
-        for (int s = 0; s < SPP; s++) {
-            Runnable[] tasks = new Runnable[width];
 
-            for (int u = 0; u < width; u++) {
-                tasks[u] = new RenderTask(u, s, renderer, ui, noiseMap);
+        Runnable[] tasks = new Runnable[width];
+
+        for (int u = 0; u < width; u++) {
+            tasks[u] = new RenderTask(u, SPP, renderer, ui);
+        }
+
+        ExecutorService pool = Executors.newFixedThreadPool(NUM_THREADS);
+
+        for (int i = 0; i < tasks.length; i++) {
+            pool.execute(tasks[i]);
+        }
+
+        pool.shutdown();
+
+        while (!pool.isTerminated()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-
-            ExecutorService pool = Executors.newFixedThreadPool(NUM_THREADS);
-
-            for (int i = 0; i < tasks.length; i++) {
-                pool.execute(tasks[i]);
-            }
-
-            pool.shutdown();
-
-            while (!pool.isTerminated()) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                ui.display();
-                // Wait for all threads to finish
-            }
-
-            ExtendedImage render = ui.getImage();
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    double[] upColor = render.getDoubleColor(x, y + 1);
-                    double[] downColor = render.getDoubleColor(x, y - 1);
-                    double[] leftColor = render.getDoubleColor(x - 1, y);
-                    double[] rightColor = render.getDoubleColor(x + 1, y);
-                    double[] thisColor = render.getDoubleColor(x, y);
-
-                    double upDot = Math.abs(LinearAlgebra.distance(thisColor, upColor));
-                    double downDot = Math.abs(LinearAlgebra.distance(thisColor, downColor));
-                    double leftDot = Math.abs(LinearAlgebra.distance(thisColor, leftColor));
-                    double rightDot = Math.abs(LinearAlgebra.distance(thisColor, rightColor));
-
-                    double totalDifference = (upDot + downDot + leftDot + rightDot) / (4.0d * Math.sqrt(2.0d));
-                    totalDifference = Math.min(totalDifference, 1.0d);
-                    // System.out.println(totalDifference);
-
-                    noiseMap.setColor(x, y, new double[]{totalDifference, totalDifference, totalDifference});
-                }
-            }
-
-            System.out.println("Sample " + s + " Complete");
+            ui.display();
+            // Wait for all threads to finish
         }
 
         long endTime = System.nanoTime();
@@ -163,28 +141,49 @@ class RenderTask implements Runnable {
     private final int height;
     private final int width;
     private final int x;
-    private final int sample;
+    private final int maxSamples;
     private final MarchingRenderer renderer;
-    private final ExtendedImage noiseMap;
     private final UI ui;
 
-    public RenderTask(int x, int sample, MarchingRenderer renderer, UI ui, ExtendedImage noiseMap) {
+    public RenderTask(int x, int maxSamples, MarchingRenderer renderer, UI ui) {
         this.renderer = renderer;
         this.ui = ui;
         this.x = x;
-        this.sample = sample;
+        this.maxSamples = maxSamples;
         this.height = renderer.getCamera().getHeight();
         this.width = renderer.getCamera().getWidth();
-        this.noiseMap = noiseMap;
     }
 
     public void run() {
         for (int y = 0; y < this.height; y++) {
-            double noise = this.noiseMap.getDoubleColor(x, y)[0];
-            if (noise >= 0.001d | sample == 0) {
-                Color color = renderer.renderPixel(x, y);
-                color = mixColors(ui.getPixel(x, y), color, (1.0d / (this.sample + 1)));
-                ui.drawPixel(x, y, color);
+            double[][] colors = new double[this.maxSamples][3];
+
+            int s = 0;
+            for (; s < this.maxSamples; s++) {
+                double[] color = renderer.renderPixel(x, y);
+                colors[s] = color;
+
+                if (s == 1) {
+                    boolean same = (LinearAlgebra.distance(colors[0], colors[1]) <= 1);
+                    if (same) {
+                        break;
+                    }
+                }
+            }
+
+            if (s < this.maxSamples) {
+                this.ui.drawPixel(this.x, y, doubleArrayToColor(colors[0]));
+            } else {
+                double[] totalColor = new double[3];
+
+                for (int i = 0; i < this.maxSamples; i++) {
+                    totalColor[0] += colors[i][0];
+                    totalColor[1] += colors[i][1];
+                    totalColor[2] += colors[i][2];
+                }
+
+                totalColor = LinearAlgebra.div(totalColor, this.maxSamples);
+                this.ui.drawPixel(this.x, y, doubleArrayToColor(totalColor));
             }
         }
     }
@@ -195,5 +194,12 @@ class RenderTask implements Runnable {
         double[] mixed = LinearAlgebra.mix(first, second, factor);
 
         return new Color((int) (mixed[0] * 255), (int) (mixed[1] * 255), (int) (mixed[2] * 255));
+    }
+
+    private Color doubleArrayToColor(double[] color) {
+        color[0] = Math.min(Math.max(color[0], 0), 255);
+        color[1] = Math.min(Math.max(color[1], 0), 255);
+        color[2] = Math.min(Math.max(color[2], 0), 255);
+        return new Color((int) color[0], (int) color[1], (int) color[2]);
     }
 }
