@@ -41,7 +41,7 @@ public class Ray {
     }
 
     public void setDirection(double[] direction) {
-        this.direction = direction;
+        this.direction = normalize(direction);
     }
 
     public int getSteps() {

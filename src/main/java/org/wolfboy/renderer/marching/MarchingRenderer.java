@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Random;
 
 public class MarchingRenderer extends Renderer {
 
@@ -19,6 +20,7 @@ public class MarchingRenderer extends Renderer {
     private final double MIN_DISTANCE;
     private BufferedImage skybox;
     private boolean useSkybox = false;
+    private Random random;
 
     private final MarchingScene scene;
 
@@ -28,6 +30,8 @@ public class MarchingRenderer extends Renderer {
 
         MAX_DISTANCE = 100.0d;
         MIN_DISTANCE = 0.0001d;
+
+        this.random = new Random((long) this.camera.getHeight() * this.camera.getWidth());
     }
 
     public void addSkybox(File image) {
@@ -44,6 +48,11 @@ public class MarchingRenderer extends Renderer {
         while (distance < maxDistance) {
             double[] p = ray.getPosition();
             double d = this.scene.getDistance(p);
+
+            d = Math.min(d, 0.1);
+
+            double[] randVec = LinearAlgebra.mul(LinearAlgebra.sub(new double[]{this.random.nextDouble(), this.random.nextDouble(), this.random.nextDouble()}, 0.5), 0.01);
+            ray.setDirection(LinearAlgebra.add(ray.getDirection(), randVec));
 
             ray.step(d);
             distance += d;

@@ -31,11 +31,11 @@ public class Main {
         // 480p (854 * 480)
         // 360p (640 * 360)
 
-        final int width = 1920;
-        final int height = 1080;
+        final int width = 640;
+        final int height = 360;
         final boolean save = false;
-        final int SPP = 32;
-        final int NUM_THREADS = 8;
+        final int SPP = 8;
+        final int NUM_THREADS = 18;
 
         UI ui = new UI(width, height);
         ExtendedImage noiseMap = new ExtendedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -77,12 +77,12 @@ public class Main {
 
         MarchingObject[] objects = new MarchingObject[6];
         // objects[6] = new Box(new TextureMaterial(1.0d, bricks, bricksNormal), new double[]{0.0d, 0.0d, 0.0d}, new double[]{2.0d, 2.0d, 2.0d});
-        objects[5] = new Torus(new SolidMaterial(new Color(134, 255, 184), 0.0d, 0.1d, 0.9d), new double[]{0.0d, 0.0d, 0.0d}, 0.5d, 1.0d);
+        objects[5] = new Torus(new SolidMaterial(new Color(255, 177, 220), 0.8d, 0.1d, 0.0d), new double[]{0.0d, 0.0d, 0.0d}, 0.5d, 1.0d);
         objects[4] = new Plane(new TextureMaterial(1.0d, check), new double[]{0.0d, 0.0d, -0.5d}, new double[]{0.0d, 0.0d, 0.0d}, 'z');
-        objects[3] = new Sphere(new TextureMaterial(1.0d, uv), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[2] = new Sphere(new SolidMaterial(new Color(255, 236, 173), 0.0d, 0.05d, 0.9d), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
-        objects[1] = new Sphere(new TextureMaterial(1.0d, metal, metalNormal, metalMetallic, metalRoughness), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
-        objects[0] = new Sphere(new TextureMaterial(1.0d, steel, steelNormal, steelMetallic, steelRoughness), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[3] = new Sphere(new SolidMaterial(new Color(42, 184, 224), 0.0d, 0.1d, 0.0d), new double[]{2.0d, 2.0d, 0.0d}, 1.0f);
+        objects[2] = new Sphere(new SolidMaterial(new Color(255, 236, 173), 0.0d, 0.1d, 0.0d), new double[]{-2.0d, 2.0d, 0.0d}, 1.0f);
+        objects[1] = new Sphere(new SolidMaterial(new Color(199, 91, 241), 0.0d, 0.1d, 0.0d), new double[]{2.0d, -2.0d, 0.0d}, 1.0f);
+        objects[0] = new Sphere(new SolidMaterial(new Color(134, 255, 184), 0.0d, 0.1d, 0.0d), new double[]{-2.0d, -2.0d, 0.0d}, 1.0f);
         // objects[0] = new Fractal(new Material(new Color(121, 225, 194)), new double[]{0.0d, 0.0d, 0.0d}, new double[]{0.0d, 0.0d, 0.0d}, new double[]{1.0d, 1.0d, 1.0d});
 
         MarchingScene scene = new MarchingScene(objects, lights);
